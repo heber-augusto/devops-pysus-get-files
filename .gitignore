@@ -1,0 +1,16 @@
+.idea
+PySUS.egg-info/
+build/
+dist/
+sus-files/*
+*__pycache__/*
+*.o
+*.so
+*.pyc
+*.pyo
+.eggs
+*.csv
+.vscode/
+bin/
+lib/
+pyvenv.cfg

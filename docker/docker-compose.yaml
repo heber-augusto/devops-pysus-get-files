@@ -1,0 +1,19 @@
+version: '3.3'
+services: 
+  auto-get-files:
+    build:
+      context: ".."
+      dockerfile: docker/Dockerfile
+    hostname: pysus-auto-get-files
+    container_name: pysus-auto-get-files
+    privileged: true
+    environment:
+      - DISPLAY=0
+      - STATE=ES
+      - YEAR=2020
+      - MONTH=11
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - type: bind
+        source: ../sus-files
+        target: /home/developer/pysus
