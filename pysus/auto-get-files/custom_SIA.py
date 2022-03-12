@@ -156,7 +156,7 @@ def _fetch_file(fname, ftp, ftype):
     except Exception as exc:
         raise Exception(f"Retrieval of file {fname} failed with the following error:\n {exc}")
     fnfull_dbf = fnfull.replace('.dbc', '.dbf')
-
+    fobj.close()
     dbc2dbf(fnfull, fnfull_dbf)
     os.unlink(fnfull)    
     df = read_dbc_dbf(fnfull_dbf)
@@ -172,6 +172,7 @@ def download_multiples(fnames, ftp):
         fobj = open(fnfull, "wb")
         try:
             ftp.retrbinary(f"RETR {fn}", fobj.write)
+            fobj.close()
             dbc2dbf(fnfull, fnfull.replace('.dbc', '.dbf'))
             os.unlink(fnfull)
         except Exception as exc:

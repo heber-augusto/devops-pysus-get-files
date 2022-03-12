@@ -20,11 +20,18 @@ print(month)
 
 print('downloading')
 df_pa = download_sia(state,year, month, cache=False, group= ['PA',])
-
 if type(df_pa) == pd.DataFrame:
     print('tratando arquivo unico')
     try:
         print(df_pa.head())
+        year_2dig = str(year)[-2:]
+        parquet_filepath = f'/home/developer/pysus/PA{state}{year_2dig.zfill(2)}{str(month).zfill(2)}.parquet.gzip'
+        print(parquet_filepath)
+        df_pa.to_parquet(parquet_filepath,
+                compression='gzip')
+
+
+
     except Exception as exc:
         raise Exception(f"df_pa.head() failed with the following error:\n {exc}")
 
@@ -35,18 +42,25 @@ else:
     mypath = r'/home/developer/pysus'
     f = []
     for (dirpath, dirnames, filenames) in os.walk(mypath):
-        f.extend(filenames)
+        for filename in filenames:
+            if filename.endswith(".dbf"):
+                f.append(filename)
         break
     print(f)
 
-    filepath = os.path.join(mypath, f[0])
-    print(filepath)
-
-    try:
-        df = read_dbc_dbf(filepath)
-    except Exception as exc:
-        raise Exception(f"read_dbc_dbf() failed with the following error:\n {exc}")
-
-    os.unlink(filepath)
+    for filename in f:
+        filepath = os.path.join(mypath, filename)
+        print(filepath)
+        
+        try:
+            df = read_dbc_dbf(filepath)
+        except Exception as exc:
+            raise Exception(f"read_dbc_dbf() failed with the following error:\n {exc}")
+        parquet_filepath = filepath.replace('.dbf', '.parquet.gzip')
+        print(parquet_filepath)
+        df.to_parquet(parquet_filepath,
+                compression='gzip') 
+        
+        os.unlink(filepath)
 
     #read_dbc_dbf(f[0])
