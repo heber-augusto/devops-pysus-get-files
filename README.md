@@ -11,5 +11,7 @@ A docker-compose and docker files to collect SIA PA files using [PySUS library](
    ```
  - The image can be found at https://hub.docker.com/repository/docker/heberaugusto/pysus-get-files
 
+ - Example on how to call docker image and set parameters:
+   ```docker run --mount type=bind,source="$(pwd)"/sus-files,target=/home/developer/pysus -e "STATE=ES" -e "YEAR=2021" -e "MONTH=4" heberaugusto/pysus-get-files:latest```
 
-sudo docker run --mount type=bind,source="$(pwd)"/../sus-files,target=/home/developer/pysus -e "STATE=ES" -e "YEAR=2021" -e "MONTH=4" docker_auto-get-files
+ The target '/home/developer/pysus' is the default path, inside docker container, where files are created.
