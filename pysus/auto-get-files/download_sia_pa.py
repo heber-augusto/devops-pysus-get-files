@@ -2,7 +2,7 @@
 
 # print('bla')
 
-from custom_SIA import download as download_sia
+from custom_SIA import download as download_sia, dbf_2_parquet
 from pysus.utilities.readdbc import read_dbc_dbf
 
 from dbfread import DBF
@@ -19,8 +19,13 @@ print(year)
 print(month)
 
 print('downloading')
-df_pa = download_sia(state,year, month, cache=False, group= ['PA',])
-if type(df_pa) == pd.DataFrame:
+dbf_file_list = download_sia(state,year, month, cache=False, group= ['PA',])
+for filepath in dbf_file_list:
+    parquet_filepath = filepath.replace('.dbf', '.parquet.gzip')    
+    dbf_2_parquet(filepath, parquet_filepath)
+
+
+"""if type(df_pa) == pd.DataFrame:
     print('tratando arquivo unico')
     try:
         print(df_pa.head())
@@ -63,4 +68,4 @@ else:
         
         os.unlink(filepath)
 
-    #read_dbc_dbf(f[0])
+    #read_dbc_dbf(f[0])"""
