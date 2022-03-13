@@ -142,42 +142,30 @@ def _fetch_file(fname, ftp, ftype):
     multiples = len(fnames) > 1
 
     if multiples:
-        download_multiples(fnames, ftp)
-        print(f"This download is split into the following files: {fnames}\n"
-              f"They have been downloaded in {CACHEPATH}.\n"
-              f"To load them, use the pysus.utilities.read_dbc_dbf function.")
-        return
+        return download_multiples(fnames, ftp)
+    else:
+        return [download_single_file(fname, ftp), ]
 
+def download_single_file(fname, ftp):
     fnfull = os.path.join(CACHEPATH, fname)
+    dbf_filepath = fnfull.replace('.dbc', '.dbf')    
     print(f"Downloading {fname}...")
     fobj = open(fnfull, "wb")
     try:
         ftp.retrbinary(f"RETR {fname}", fobj.write)
+        fobj.close()
+        dbc2dbf(fnfull, dbf_filepath)
+        os.unlink(fnfull)
     except Exception as exc:
         raise Exception(f"Retrieval of file {fname} failed with the following error:\n {exc}")
-    fnfull_dbf = fnfull.replace('.dbc', '.dbf')
-    fobj.close()
-    dbc2dbf(fnfull, fnfull_dbf)
-    os.unlink(fnfull)    
-    df = read_dbc_dbf(fnfull_dbf)
-    os.unlink(fnfull_dbf)
-    return df
-
+    return dbf_filepath
 
 
 def download_multiples(fnames, ftp):
+    dbf_list = []
     for fn in fnames:
-        fnfull = os.path.join(CACHEPATH, fn)
-        print(f"Downloading {fn}...")
-        fobj = open(fnfull, "wb")
-        try:
-            ftp.retrbinary(f"RETR {fn}", fobj.write)
-            fobj.close()
-            dbc2dbf(fnfull, fnfull.replace('.dbc', '.dbf'))
-            os.unlink(fnfull)
-        except Exception as exc:
-            raise Exception(f"Retrieval of file {fn} failed with the following error:\n {exc}")
-
+        dbf_list.append(download_single_file(fn, ftp))
+    return dbf_list
 
 def check_file_split(fname: str, ftp: FTP) -> list:
     """
@@ -189,9 +177,20 @@ def check_file_split(fname: str, ftp: FTP) -> list:
     files = []
     flist = ftp.nlst()
     if fname not in flist:
-        for l in ['a', 'b', 'c', 'd']:
+        for l in ['a', 'b', 'c', 'd', 'e', 'f']:
             nm, ext = fname.split('.')
             if f'{nm}{l}.{ext}' in flist:
                 files.append(f'{nm}{l}.{ext}')
 
     return files
+
+def dbf_2_parquet(dbf_filepath, parquet_filepath, compression='gzip'):
+    try:
+        df = read_dbc_dbf(dbf_filepath)
+        df.to_parquet(
+            parquet_filepath,
+            compression=compression)
+        os.unlink(dbf_filepath)       
+    except Exception as exc:
+        raise Exception(f"dbf_2_parquet() failed with the following error:\n {exc}")
+
