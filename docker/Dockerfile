@@ -51,4 +51,4 @@ RUN chmod +x dbc-2-dbf
 
 USER developer
 
-CMD [ "python","-u", "./download_sia_pa.py"]
+CMD [ "python","-u", "./sia/download_sia.py"]
