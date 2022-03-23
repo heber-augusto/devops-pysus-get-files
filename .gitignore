@@ -8,6 +8,8 @@ sus-files/*
 *.so
 *.pyc
 *.pyo
+*.dbc
+*.dbf
 .eggs
 *.csv
 .vscode/

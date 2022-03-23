@@ -30,11 +30,25 @@ RUN mamba update --all --yes --quiet \
   && mamba env update --file ${APP_TMP_DATA}/environment.yaml --name base \
   && mamba clean -afy
 
-USER developer
+#install wget
+RUN apt-get install wget
 
-# Copy only notebooks to the container with permissions to user
+#create folder to receive dbc and dbf files
+RUN mkdir ${HOME}/dbc-files
+RUN mkdir ${HOME}/dbf-files
+
+# Copy sources and shell scripts
 RUN mkdir ${HOME}/auto-get-files
 WORKDIR ${HOME}/auto-get-files
 COPY pysus/auto-get-files .
+
+RUN chmod +x collect_from_ftp.sh
+
+WORKDIR ${HOME}/auto-get-files/blast
+RUN gcc blast.c blast-dbf.c -o ../dbc-2-dbf
+WORKDIR ${HOME}/auto-get-files
+RUN chmod +x dbc-2-dbf
+
+USER developer
 
 CMD [ "python","-u", "./download_sia_pa.py"]
