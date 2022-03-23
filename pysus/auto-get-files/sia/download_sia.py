@@ -2,7 +2,7 @@
 
 # print('bla')
 
-from custom_SIA import download as download_sia, dbf_2_parquet, get_files_to_download
+from custom_sia import download as download_sia, dbf_2_parquet, get_files_to_download
 import subprocess
 import pandas as pd
 import os
