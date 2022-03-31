@@ -1,9 +1,8 @@
 from ftplib import FTP
 from typing import List, Union
 
-
 generic_path="/dissemin/publicos/CNES/200508_/Dados"
-def download(
+def get_files_to_download(
         state: str,
         year: int,
         month: int,
@@ -65,6 +64,7 @@ def download(
         ftp.cwd(generic_path)
 
         ftp.cwd(gname)
+        path = ftp.pwd()
         flist = ftp.nlst()
         for month in months:
             fname = f"{gname}{state}{year2.zfill(2)}{month}.dbc"
@@ -77,6 +77,7 @@ def download(
             else:
                 files = [fname,]
             for filename in files:
+                filename = f"{path}/{filename}"
                 list_of_ftp_paths.append(filename)
 
     return list_of_ftp_paths
