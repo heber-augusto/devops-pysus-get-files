@@ -3,6 +3,10 @@ PySUS.egg-info/
 build/
 dist/
 sus-files/*
+output-files/*
+dbc-files/*
+dbf-files/*
+csv-files/*
 *__pycache__/*
 *.o
 *.so
