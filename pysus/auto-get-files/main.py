@@ -78,6 +78,7 @@ for k,file_types in file_group_per_type.items():
             dbf_file_path = f'{dbf_dir}/{nm}.dbf'
             dbc_file_path = f'{dbc_dir}/{nm}.dbc'
             csv_file_path = f'{csv_dir}/{nm}.csv'
+            # <ESTADO>/<ANO>/<MES>/<TIPO>/<GRUPO>
             pq_file_path = f'{output_dir}/{nm}.parquet.gzip'
             
             print('creating dbf file')
