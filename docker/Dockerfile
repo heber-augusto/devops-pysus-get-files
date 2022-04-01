@@ -82,4 +82,4 @@ RUN chmod +x dbc-2-dbf
 
 USER developer
 
-CMD [ "python","-u", "./sia/download_sia.py"]
+CMD [ "python","-u", "./main.py"]

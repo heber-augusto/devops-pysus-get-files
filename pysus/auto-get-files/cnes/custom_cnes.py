@@ -6,7 +6,7 @@ def get_files_to_download(
         state: str,
         year: int,
         month: int,
-        group: Union[str, List[str]] = ["DC", "EQ"],
+        groups: Union[str, List[str]] = ["DC", "EQ"],
 ) -> list:
     """
     Download CNES-SUS records for state year and month and returns dataframe
@@ -42,8 +42,8 @@ def get_files_to_download(
     else:
         months = [str(month).zfill(2),]
 
-    if isinstance(group, str):
-        group = [group]
+    if isinstance(groups, str):
+        groups = [groups]
     
     ftp = FTP("ftp.datasus.gov.br")
     ftp.login()
@@ -58,8 +58,14 @@ def get_files_to_download(
     
     list_of_ftp_paths = []
     
-    for gname in group:
+    for gname in groups:
         gname = gname.upper()
+
+        ftp_paths_dict = {
+            'type':f"SIA-{gname}",
+            'ftp_paths':[]
+        }
+
 
         ftp.cwd(generic_path)
 
@@ -77,7 +83,8 @@ def get_files_to_download(
             else:
                 files = [fname,]
             for filename in files:
-                filename = f"{path}/{filename}"
-                list_of_ftp_paths.append(filename)
+                ftp_path = f"{path}/{filename}"
+                ftp_paths_dict['ftp_paths'].append(ftp_path)
+        list_of_ftp_paths.append(ftp_paths_dict)
 
     return list_of_ftp_paths
