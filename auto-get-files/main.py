@@ -74,8 +74,7 @@ for file_type,file_groups in file_group_per_type.items():
     for file_group in ftp_files:
         for ftp_file_dict in file_group['ftp_paths']:
             ftp_file = ftp_file_dict['ftp_path']
-            # get files from FTP
-            output_dbc = subprocess.check_output(['./collect_from_ftp.sh',ftp_file,dbc_dir])
+
             filename = os.path.basename(ftp_file)
             nm, ext = filename.split('.')
             dbf_file_path = f'{dbf_dir}/{nm}.dbf'
@@ -85,7 +84,14 @@ for file_type,file_groups in file_group_per_type.items():
             output_file_folder = f"""{ftp_file_dict['state']}/{ftp_file_dict['year']}/{ftp_file_dict['month']}/{file_type}/{ftp_file_dict['file_group']}"""
             pq_file_dir = f'{output_dir}/{output_file_folder}'
             pq_file_path = f'{pq_file_dir}/{nm}.parquet.gzip'
-            
+
+            if os.path.exists(pq_file_path) == True:
+                print(f'file {nm}.parquet.gzip already exists')
+                continue
+
+            # get files from FTP
+            output_dbc = subprocess.check_output(['./collect_from_ftp.sh',ftp_file,dbc_dir])
+
             print('creating dbf file')
             # convert dbc file to dbf
             output_dbf = subprocess.check_output(['./dbc-2-dbf',dbc_file_path,dbf_file_path])
