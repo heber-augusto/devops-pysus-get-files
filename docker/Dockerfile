@@ -71,7 +71,7 @@ RUN chmod o+w ${HOME}/output-files/.
 # Copy sources and shell scripts
 RUN mkdir ${HOME}/auto-get-files
 WORKDIR ${HOME}/auto-get-files
-COPY pysus/auto-get-files .
+COPY auto-get-files .
 
 RUN chmod +x collect_from_ftp.sh
 

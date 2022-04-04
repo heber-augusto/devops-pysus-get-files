@@ -4,6 +4,8 @@ import os
 import csv
 import sys
 
+from pathlib import Path
+
 from datetime import datetime
 
 from sia.custom_sia   import get_files_to_download as sia_get_files
@@ -44,33 +46,34 @@ print('downloading')
 
 # dicionario de grupos de arquivo por tipo
 file_group_per_type = {
-  'cnes':['DC','EP','EQ','HB','IN','LT','PF','RC','SR','ST'],
-  'sia':['PA','AQ','AR','BI','AM','SAD', 'PS'],
-  'sih':['RD',],
+  'CNES':['DC','EP','EQ','HB','IN','LT','PF','RC','SR','ST'],
+  'SIA':['PA','AQ','AR','BI','AM','SAD', 'PS'],
+  'SIH':['RD',],
 }
 
 file_group_per_type = {
-  'cnes':['DC','EP','EQ','HB','IN','LT','PF','RC','SR'],
-  'sia':['PA','AQ','AR','BI','AM','SAD', 'PS'],
-  'sih':['RD',],
+  'CNES':['DC','EP','EQ','HB','IN','LT','PF','RC','SR'],
+  'SIA':['PA','AQ','AR','BI','AM','SAD', 'PS'],
+  'SIH':['RD',],
 }
 
 
 
 # dicionario de funcoes por tipo
 func_per_type = {
-  'cnes':cnes_get_files,
-  'sia':sia_get_files,
-  'sih':sih_get_files,
+  'CNES':cnes_get_files,
+  'SIA':sia_get_files,
+  'SIH':sih_get_files,
 }
 
 
-for k,file_types in file_group_per_type.items():
-    get_file = func_per_type[k]
-    ftp_files = get_file(state, year, month, groups=file_types)
+for file_type,file_groups in file_group_per_type.items():
+    get_file = func_per_type[file_type]
+    ftp_files = get_file(state, year, month, groups=file_groups)
 
     for file_group in ftp_files:
-        for ftp_file in file_group['ftp_paths']:
+        for ftp_file_dict in file_group['ftp_paths']:
+            ftp_file = ftp_file_dict['ftp_path']
             # get files from FTP
             output_dbc = subprocess.check_output(['./collect_from_ftp.sh',ftp_file,dbc_dir])
             filename = os.path.basename(ftp_file)
@@ -79,7 +82,9 @@ for k,file_types in file_group_per_type.items():
             dbc_file_path = f'{dbc_dir}/{nm}.dbc'
             csv_file_path = f'{csv_dir}/{nm}.csv'
             # <ESTADO>/<ANO>/<MES>/<TIPO>/<GRUPO>
-            pq_file_path = f'{output_dir}/{nm}.parquet.gzip'
+            output_file_folder = f"""{ftp_file_dict['state']}/{ftp_file_dict['year']}/{ftp_file_dict['month']}/{file_type}/{ftp_file_dict['file_group']}"""
+            pq_file_dir = f'{output_dir}/{output_file_folder}'
+            pq_file_path = f'{pq_file_dir}/{nm}.parquet.gzip'
             
             print('creating dbf file')
             # convert dbc file to dbf
@@ -93,7 +98,11 @@ for k,file_types in file_group_per_type.items():
             if remove_intermediate == True:
                 os.unlink(dbf_file_path)
             
-            print('creating parquet file')        
+            print(f'creating folders for file {output_file_folder}')
+            path = Path(pq_file_dir)
+            path.mkdir(parents=True, exist_ok=True)
+
+            print(f'creating parquet file {pq_file_path}')
             # convert csv to parquet
             csv_to_parquet(csv_file_path, pq_file_path)
             if remove_intermediate == True:
