@@ -4,24 +4,6 @@ services:
     build:
       context: ".."
       dockerfile: docker/Dockerfile
-    hostname: pysus-auto-get-files
-    container_name: pysus-auto-get-files
+    hostname: sus-auto-get-files
+    container_name: sus-auto-get-files
     privileged: true
-    environment:
-      - DISPLAY=0
-      - STATE=ES
-      - YEAR=2020
-      - MONTH=11
-      - DBC_DIR=/home/developer/dbc-files      
-      - DBF_DIR=/home/developer/dbf-files      
-    volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix
-      - type: bind
-        source: ../sus-files
-        target: /home/developer/pysus
-      - type: bind
-        source: ../dbc-files
-        target: /home/developer/dbc-files
-      - type: bind
-        source: ../dbf-files
-        target: /home/developer/dbf-files        

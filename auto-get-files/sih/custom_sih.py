@@ -14,91 +14,12 @@ from ftplib import FTP
 from typing import Dict, List, Optional, Tuple, Union
 from pprint import pprint
 
-import pandas as pd
-from dbfread import DBF
-
-
-
 group_dict: Dict[str, Tuple[str, int, int]] = {
     "SP": ("TBD", 1, 1992),
     "RD": ("TBD", 1, 1992),
     "RJ": ("TBD", 1, 1992),
     "ER": ("TBD", 1, 2008),
 }
-
-def show_datatypes():
-    pprint(group_dict)
-
-
-
-
-def _fetch_file(fname, ftp, ftype):
-    """
-    Does the FTP fetching.
-    :param fname: file name
-    :param ftp: ftp connection object
-    :param ftype: file type: DBF|DBC
-    :return: pandas dataframe
-    """
-    multiples = False
-    fnames = check_file_split(fname, ftp)
-
-    multiples = len(fnames) > 1
-
-    if multiples:
-        return download_multiples(fnames, ftp)
-    else:
-        return [download_single_file(fname, ftp), ]
-
-def download_single_file(fname, ftp):
-    fnfull = os.path.join(CACHEPATH, fname)
-    dbf_filepath = fnfull.replace('.dbc', '.dbf')    
-    print(f"Downloading {fname}...")
-    fobj = open(fnfull, "wb")
-    try:
-        ftp.retrbinary(f"RETR {fname}", fobj.write)
-        fobj.close()
-        dbc2dbf(fnfull, dbf_filepath)
-        os.unlink(fnfull)
-    except Exception as exc:
-        raise Exception(f"Retrieval of file {fname} failed with the following error:\n {exc}")
-    return dbf_filepath
-
-
-def download_multiples(fnames, ftp):
-    dbf_list = []
-    for fn in fnames:
-        dbf_list.append(download_single_file(fn, ftp))
-    return dbf_list
-
-def check_file_split(fname: str, ftp: FTP) -> list:
-    """
-    Check for split filenames. Sometimes when files are too large, they are split into multiple files ending in a, b, c, ...
-    :param fname: filename
-    :param ftp: ftp conection
-    :return: list
-    """
-    files = []
-    flist = ftp.nlst()
-    if fname not in flist:
-        for l in ['a', 'b', 'c', 'd', 'e', 'f']:
-            nm, ext = fname.split('.')
-            if f'{nm}{l}.{ext}' in flist:
-                files.append(f'{nm}{l}.{ext}')
-
-    return files
-
-def dbf_2_parquet(dbf_filepath, parquet_filepath, compression='gzip'):
-    try:
-        df = read_dbc_dbf(dbf_filepath)
-        df.to_parquet(
-            parquet_filepath,
-            compression=compression)
-        os.unlink(dbf_filepath)       
-    except Exception as exc:
-        raise Exception(f"dbf_2_parquet() failed with the following error:\n {exc}")
-
-
 
 def get_files_to_download(
         state: str,
@@ -179,7 +100,16 @@ def get_files_to_download(
             files = [fname,]
             for filename in files:
                 ftp_path = f"{file_prefix}/{filename}"
-                ftp_paths_dict['ftp_paths'].append(ftp_path)
+                ftp_file_dict = {
+                    'ftp_path':ftp_path,
+                    'state':state,
+                    'year':year,
+                    'month':month,
+                    'file_group':gname
+                }
+
+
+                ftp_paths_dict['ftp_paths'].append(ftp_file_dict)
         list_of_ftp_paths.append(ftp_paths_dict)
         
     return list_of_ftp_paths

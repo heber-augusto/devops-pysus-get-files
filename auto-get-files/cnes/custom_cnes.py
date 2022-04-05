@@ -84,7 +84,16 @@ def get_files_to_download(
                 files = [fname,]
             for filename in files:
                 ftp_path = f"{path}/{filename}"
-                ftp_paths_dict['ftp_paths'].append(ftp_path)
+                ftp_file_dict = {
+                    'ftp_path':ftp_path,
+                    'state':state,
+                    'year':year,
+                    'month':month,
+                    'file_group':gname
+                }
+
+
+                ftp_paths_dict['ftp_paths'].append(ftp_file_dict)
         list_of_ftp_paths.append(ftp_paths_dict)
 
     return list_of_ftp_paths

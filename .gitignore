@@ -1,5 +1,4 @@
 .idea
-PySUS.egg-info/
 build/
 dist/
 sus-files/*
