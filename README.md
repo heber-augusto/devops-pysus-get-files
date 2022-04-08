@@ -12,6 +12,7 @@ A docker-compose and docker files to collect SIA PA files using [PySUS library](
  - The image can be found at https://hub.docker.com/repository/docker/heberaugusto/pysus-get-files
 
  - Example on how to call docker image and set parameters:
-   ```docker run -it --mount type=bind,source="$(pwd)"/../dbf-files,target=/home/developer/dbf-files --mount type=bind,source="$(pwd)"/../dbc-files,target=/home/developer/dbc-files -e "STATE=SP" -e "YEAR=2021" -e "MONTH=4" -e "DBC_DIR=/home/developer/dbc-files" -e "DBF_DIR=/home/developer/dbf-files" heberaugusto/pysus-get-files:latest```
+   ```docker run --mount type=bind,source=/home/ubuntu/output-files,target=/home/developer/output-files -e "STATE=SP" -e "YEAR=2014" -e "MONTH=-1" -e "OUTPUT_DIR=/home/developer/output-files" heberaugusto/pysus-get-files:latest```
 
- The target '/home/developer/dbf-files' is the default path, inside docker container, where dbc and dbf files are created.
+ 
+ The target '/home/developer/output-files' is the default path, inside docker container, where parquet files are created.
