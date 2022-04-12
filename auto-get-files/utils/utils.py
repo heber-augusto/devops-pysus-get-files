@@ -26,7 +26,7 @@ def csv_to_parquet(csv_file, path_parquet):
     chunksize = 100_000
     # pd.read_parquet('/home/falkor/monitor_rosa/files/parquet/sampa_2003.parquet')
     # print("Inciando Leiturra: ",datetime.now().strftime("%d/%m/%Y %H:%M:%S.%f"))
-    csv_stream = pd.read_csv(csv_file, chunksize=chunksize, low_memory=False, dtype=str)
+    csv_stream = pd.read_csv(csv_file, chunksize=chunksize, low_memory=False, dtype=str, keep_default_na=False)
 
     # print("Fim leitura: ",datetime.now().strftime("%d/%m/%Y %H:%M:%S.%f"))
 
