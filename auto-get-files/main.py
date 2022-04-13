@@ -3,6 +3,7 @@ import pandas as pd
 import os
 import csv
 import sys
+import json
 
 from pathlib import Path
 
@@ -66,6 +67,18 @@ func_per_type = {
   'SIH':sih_get_files,
 }
 
+def check_file_already_processed(
+    completed_file_path,
+    ftp_file_dict):
+    """
+    
+    """
+    f = open(completed_file_path, 'r')
+    completed_file_dict = json.loads(f.read())
+    return (completed_file_dict['file_size'] == ftp_file_dict['file_size']) and \
+           (completed_file_dict['file_date'] == ftp_file_dict['file_date']) and \
+           (completed_file_dict['file_time'] == ftp_file_dict['file_time'])
+
 
 for file_type,file_groups in file_group_per_type.items():
     get_file = func_per_type[file_type]
@@ -80,13 +93,18 @@ for file_type,file_groups in file_group_per_type.items():
             dbf_file_path = f'{dbf_dir}/{nm}.dbf'
             dbc_file_path = f'{dbc_dir}/{nm}.dbc'
             csv_file_path = f'{csv_dir}/{nm}.csv'
+            
+
             # <ESTADO>/<ANO>/<MES>/<TIPO>/<GRUPO>
             output_file_folder = f"""{ftp_file_dict['state']}/{ftp_file_dict['year']}/{ftp_file_dict['month']}/{file_type}/{ftp_file_dict['file_group']}"""
             pq_file_dir = f'{output_dir}/{output_file_folder}'
+            completed_file_path = f'{pq_file_dir}/{nm}.done'
             pq_file_path = f'{pq_file_dir}/{nm}.parquet.gzip'
 
-            if os.path.exists(pq_file_path) == True:
-                print(f'file {nm}.parquet.gzip already exists')
+            # se arquivo ja existe e não tem modificacao, continua para o proximo
+            if (os.path.exists(completed_file_path) == True) and \
+               (check_file_already_processed(completed_file_path , ftp_file_dict) == True):
+                print(f'file {nm} already exists')
                 continue
 
             # get files from FTP
@@ -112,7 +130,12 @@ for file_type,file_groups in file_group_per_type.items():
             # convert csv to parquet
             csv_to_parquet(csv_file_path, pq_file_path)
             if remove_intermediate == True:
-                os.unlink(csv_file_path)        
+                os.unlink(csv_file_path)
+
+            print(ftp_file_dict)
+            f = open(completed_file_path, 'w+')
+            f.write(json.dumps(ftp_file_dict))                
+
 
 fim_processamento = datetime.now()
 print(f"Tempo de processamento {fim_processamento - inicio_processamento}")

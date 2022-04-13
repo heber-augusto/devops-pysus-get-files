@@ -71,25 +71,48 @@ def get_files_to_download(
 
         ftp.cwd(gname)
         path = ftp.pwd()
-        flist = ftp.nlst()
+        
+        # flist = ftp.nlst()
+        flist = []
+        fdicts = {}
+        ftp.dir("", flist.append)
+        for file_info in flist:
+            tmp = file_info.split()
+            file_date = tmp[0]
+            file_time = tmp[1]
+            file_size = tmp[2]
+            file_name = tmp[3]
+            fdicts[file_name] = {
+                'file_date': file_date,
+                'file_time': file_time,
+                'file_size': file_size,
+                'file_name': file_name,
+            }
+
         for month in months:
             fname = f"{gname}{state}{year2.zfill(2)}{month}.dbc"
             files = []
-            if fname not in flist:
+            if fname not in fdicts:
                 for l in ['a', 'b', 'c', 'd', 'e', 'f']:
                     nm, ext = fname.split('.')
-                    if f'{nm}{l}.{ext}' in flist:
-                        files.append(f'{nm}{l}.{ext}')
+                    file_name = f'{nm}{l}.{ext}'
+                    if file_name in flist:
+                        files.append(fdicts[file_name])
             else:
-                files = [fname,]
-            for filename in files:
-                ftp_path = f"{path}/{filename}"
+                files = [fdicts[fname],]
+            for fdict in files:
+                file_name = fdict['file_name']
+                ftp_path = f"{path}/{file_name}"
                 ftp_file_dict = {
                     'ftp_path':ftp_path,
                     'state':state,
                     'year':year,
                     'month':month,
-                    'file_group':gname
+                    'file_group':gname,
+                    'file_date' : fdict['file_date'],
+                    'file_time' : fdict['file_time'],
+                    'file_size' : fdict['file_size'],
+                    'file_name' : file_name,
                 }
 
 

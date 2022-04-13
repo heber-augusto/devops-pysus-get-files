@@ -57,15 +57,30 @@ def get_files_to_download(
  
     
     if year >= 1992 and year < 2008:
-        ftp.cwd("/dissemin/publicos/SIHSUS/199201_200712/Dados")
         file_prefix = "/dissemin/publicos/SIHSUS/199201_200712/Dados"
     elif year >= 2008:
-        ftp.cwd("/dissemin/publicos/SIHSUS/200801_/Dados")
         file_prefix = "/dissemin/publicos/SIHSUS/200801_/Dados"
     else:
         raise ValueError("SIH does not contain data before 1992")
 
+    ftp.cwd(file_prefix)
 
+
+    flist = []
+    fdicts = {}
+    ftp.dir("", flist.append)
+    for file_info in flist:
+        tmp = file_info.split()
+        file_date = tmp[0]
+        file_time = tmp[1]
+        file_size = tmp[2]
+        file_name = tmp[3]
+        fdicts[file_name] = {
+            'file_date': file_date,
+            'file_time': file_time,
+            'file_size': file_size,
+            'file_name': file_name,
+        }
 
     for gname in groups:
         gname = gname.upper()
@@ -97,18 +112,23 @@ def get_files_to_download(
 
             fname = f"{gname}{state}{year2.zfill(2)}{month}.dbc"
             files = []
-            files = [fname,]
-            for filename in files:
-                ftp_path = f"{file_prefix}/{filename}"
+            
+            files = [fdicts[fname],]
+
+            for fdict in files:
+                file_name = fdict['file_name']
+                ftp_path = f"{file_prefix}/{file_name}"
                 ftp_file_dict = {
                     'ftp_path':ftp_path,
                     'state':state,
                     'year':year,
                     'month':month,
-                    'file_group':gname
+                    'file_group':gname,
+                    'file_date' : fdict['file_date'],
+                    'file_time' : fdict['file_time'],
+                    'file_size' : fdict['file_size'],
+                    'file_name' : file_name,
                 }
-
-
                 ftp_paths_dict['ftp_paths'].append(ftp_file_dict)
         list_of_ftp_paths.append(ftp_paths_dict)
         
