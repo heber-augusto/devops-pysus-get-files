@@ -112,8 +112,15 @@ def get_files_to_download(
 
             fname = f"{gname}{state}{year2.zfill(2)}{month}.dbc"
             files = []
-            
-            files = [fdicts[fname],]
+
+            if fname not in fdicts:
+                for l in ['a', 'b', 'c', 'd', 'e', 'f']:
+                    nm, ext = fname.split('.')
+                    file_name = f'{nm}{l}.{ext}'
+                    if file_name in fdicts:
+                        files.append(fdicts[file_name])
+            else:
+                files = [fdicts[fname],]
 
             for fdict in files:
                 file_name = fdict['file_name']

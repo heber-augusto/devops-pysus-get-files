@@ -1,4 +1,4 @@
-FROM condaforge/mambaforge
+FROM python:3.9.1
 
 LABEL maintainer="heber.augusto@gmail.com"
 
@@ -8,13 +8,14 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get -qq update --yes \
   && apt-get -qq install --yes --no-install-recommends \
-  build-essential firefox\
-  ca-certificates sudo \
   && rm -rf /var/lib/apt/lists/*
 
-RUN useradd -ms /bin/bash developer \
-  && echo "developer ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/developer \
-  && chmod 0440 /etc/sudoers.d/
+RUN useradd -ms /bin/bash developer
+
+RUN pip install --upgrade pip
+
+COPY ./requirements.txt ./requirements.txt
+RUN pip3 install -r ./requirements.txt
 
 # Set home to developer
 ENV HOME /home/developer
@@ -23,12 +24,12 @@ ENV HOME /home/developer
 ENV APP_TMP_DATA=/tmp
 
 # Copy environment file to tmp/
-COPY environment.yaml ${APP_TMP_DATA}/environment.yaml
+# COPY environment.yaml ${APP_TMP_DATA}/environment.yaml
 
 # Use environment to update the env base
-RUN mamba update --all --yes --quiet \
-  && mamba env update --file ${APP_TMP_DATA}/environment.yaml --name base \
-  && mamba clean -afy
+# RUN mamba update --all --yes --quiet \
+#  && mamba env update --file ${APP_TMP_DATA}/environment.yaml --name base \
+#  && mamba clean -afy
 
 #install wget
 RUN apt-get install wget
