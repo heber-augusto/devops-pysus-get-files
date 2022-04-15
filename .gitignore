@@ -19,3 +19,4 @@ csv-files/*
 bin/
 lib/
 pyvenv.cfg
+*.env

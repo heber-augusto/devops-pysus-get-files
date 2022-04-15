@@ -130,7 +130,7 @@ def get_files_to_download(
                 for l in ['a', 'b', 'c', 'd', 'e', 'f']:
                     nm, ext = fname.split('.')
                     file_name = f'{nm}{l}.{ext}'
-                    if file_name in flist:
+                    if file_name in fdicts:
                         files.append(fdicts[file_name])
             else:
                 files = [fdicts[fname],]

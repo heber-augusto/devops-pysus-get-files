@@ -52,12 +52,6 @@ file_group_per_type = {
   'SIH':['RD',],
 }
 
-file_group_per_type = {
-  'CNES':['DC','EP','EQ','HB','IN','LT','PF','RC','SR'],
-  'SIA':['PA','AQ','AR','BI','AM','SAD', 'PS'],
-  'SIH':['RD',],
-}
-
 
 
 # dicionario de funcoes por tipo
@@ -83,7 +77,7 @@ def check_file_already_processed(
 for file_type,file_groups in file_group_per_type.items():
     get_file = func_per_type[file_type]
     ftp_files = get_file(state, year, month, groups=file_groups)
-
+    # print(ftp_files)
     for file_group in ftp_files:
         for ftp_file_dict in file_group['ftp_paths']:
             ftp_file = ftp_file_dict['ftp_path']
