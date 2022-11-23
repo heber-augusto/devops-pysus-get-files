@@ -18,7 +18,7 @@ jobs:
           
       - name: docker test
         id: docker
-        uses: docker/action@v2
+        uses: heber-augusto/devops-pysus-get-files/docker@v2
         #with:
         #  who-to-greet: 'Mona the Octocat'          
           
