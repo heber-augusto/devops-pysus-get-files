@@ -19,6 +19,9 @@ jobs:
       - name: Build docker image
         working-directory: ./docker
         run: docker compose build
+      - name: Create output-files dir
+        run: |
+          mkdir ${{ github.workspace }}/output-files        
       - name: Run docker image
         working-directory: ./
         run: docker run --mount type=bind,source=/home/runner/work/devops-pysus-get-files/devops-pysus-get-files/output-files,target=/home/developer/output-files -e "STATE=ES" -e "YEAR=2020" -e "MONTH=11" docker.io/library/docker-auto-get-files
