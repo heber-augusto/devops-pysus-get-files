@@ -16,7 +16,8 @@ jobs:
         run: |
           ls ${{ github.workspace }}
           
-      - name: Install Composer Dependencies
+      - name: Build docker image
+        working-directory: ./
         run: docker build ./docker/. -t docker_auto-get-files
         #with:
         #  who-to-greet: 'Mona the Octocat'          
