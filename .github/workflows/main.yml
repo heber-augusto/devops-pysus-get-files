@@ -37,15 +37,15 @@ jobs:
           gcsfuse  --implicit-dirs observatorio-oncologia ${{ github.workspace }}/output-files
           
           
-      #- name: Build docker image
-      #  working-directory: ./docker
-      #  run: docker compose build
-      #- name: Run docker image
-      #  working-directory: ./
-      #  run: docker run -u root --mount type=bind,source=${{ github.workspace }}/output-files,target=/home/developer/output-files -e "STATE=ES" -e "YEAR=2019" -e "MONTH=11" docker.io/library/docker-auto-get-files
+      - name: Build docker image
+        working-directory: ./docker
+        run: docker compose build
+      - name: Run docker image
+        working-directory: ./
+        run: docker run -u root --mount type=bind,source=${{ github.workspace }}/output-files/test,target=/home/developer/output-files -e "STATE=ES" -e "YEAR=2019" -e "MONTH=11" docker.io/library/docker-auto-get-files
       - name: List downloaded files
         run: |
-          ls ${{ github.workspace }}/output-files    
+          ls ${{ github.workspace }}/output-files/test
       #- name: 'upload file to google storage'
       #  uses: 'google-github-actions/upload-cloud-storage@v1'
       #  with:
