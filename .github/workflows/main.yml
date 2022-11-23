@@ -18,7 +18,7 @@ jobs:
           
       - name: Install Composer Dependencies
         working-directory: ./docker
-        run: docker build -t docker_auto-get-files
+        run: docker build . -t docker_auto-get-files
         #with:
         #  who-to-greet: 'Mona the Octocat'          
           
