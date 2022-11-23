@@ -31,7 +31,7 @@ jobs:
           sudo apt-get install gcsfuse
           sudo groupadd fuse
           sudo usermod -a -G fuse $USER
-          chown $USER:fuse ${{ github.workspace }}/output-files
+          sudo chown $USER:fuse ${{ github.workspace }}/output-files
           gcsfuse -o rw,allow_other --dir-mode=777 --file-mode=777 --debug_http --debug_gcs --debug_fuse --implicit-dirs observatorio-oncologia ${{ github.workspace }}/output-files          
           
           
