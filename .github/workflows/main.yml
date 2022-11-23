@@ -31,5 +31,9 @@ jobs:
       - name: List downloaded files
         run: |
           ls ${{ github.workspace }}/output-files    
-          
+      - name: 'upload file to google storage'
+        uses: 'google-github-actions/upload-cloud-storage@v1'
+        with:
+          path: '${{ github.workspace }}/output-files'
+          destination: 'observatorio-oncologia/test'          
       - run: echo "🍏 This job's status is ${{ job.status }}."      
