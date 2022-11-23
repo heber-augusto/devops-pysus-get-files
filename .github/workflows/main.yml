@@ -34,7 +34,7 @@ jobs:
           sudo chown $USER:fuse ${{ github.workspace }}/output-files
           sudo chmod -R 777 ${{ github.workspace }}/output-files
           # gcsfuse  -o allow_other --dir-mode=777 --file-mode=777 --implicit-dirs observatorio-oncologia ${{ github.workspace }}/output-files
-          gcsfuse  -o rw,allow_other --implicit-dirs observatorio-oncologia ${{ github.workspace }}/output-files          
+          gcsfuse  --implicit-dirs observatorio-oncologia ${{ github.workspace }}/output-files
           
           
       #- name: Build docker image
