@@ -18,7 +18,7 @@ jobs:
           
       - name: docker test
         id: docker
-        uses: docker@v2
+        uses: docker/action@v2
         #with:
         #  who-to-greet: 'Mona the Octocat'          
           
