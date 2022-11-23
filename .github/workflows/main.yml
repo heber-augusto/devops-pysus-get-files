@@ -33,7 +33,7 @@ jobs:
           sudo usermod -a -G fuse $USER
           sudo chown $USER:fuse ${{ github.workspace }}/output-files
           
-          gcsfuse -o allow_other --dir-mode=777 --file-mode=777 --implicit-dirs observatorio-oncologia ${{ github.workspace }}/output-files
+          gcsfuse -o allow_other --dir-mode=777 --file-mode=777 --implicit-dirs observatorio-oncologia/monitor ${{ github.workspace }}/output-files
           
           
       #- name: Build docker image
