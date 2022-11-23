@@ -1,5 +1,5 @@
 on: [push]
-
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 jobs:
   build_docker_job:
     runs-on: ubuntu-latest
