@@ -36,4 +36,5 @@ jobs:
         with:
           path: '${{ github.workspace }}/output-files'
           destination: 'observatorio-oncologia/test'          
+          parent: false
       - run: echo "🍏 This job's status is ${{ job.status }}."      
