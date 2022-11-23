@@ -18,7 +18,7 @@ jobs:
           
       - name: Build docker image
         working-directory: ./
-        run: docker build ./docker/. -t docker_auto-get-files
+        run: docker compose build
         #with:
         #  who-to-greet: 'Mona the Octocat'          
           
