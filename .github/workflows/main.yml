@@ -16,9 +16,9 @@ jobs:
         run: |
           ls ${{ github.workspace }}
           
-      - name: docker test
-        id: docker
-        uses: heber-augusto/devops-pysus-get-files@main
+      - name: Install Composer Dependencies
+        working-directory: ./docker
+        run: docker build
         #with:
         #  who-to-greet: 'Mona the Octocat'          
           
