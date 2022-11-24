@@ -34,7 +34,7 @@ jobs:
           sudo usermod -a -G fuse $USER
           sudo chown $USER_ID:fuse ${{ github.workspace }}/output-files
           
-          gcsfuse  -o allow_other --dir-mode=777 --file-mode=777 --key-file=$GOOGLE_APPLICATION_CREDENTIALS --implicit-dirs observatorio-oncologia ${{ github.workspace }}/output-files
+          gcsfuse --dir-mode=777 --file-mode=777 --key-file=$GOOGLE_APPLICATION_CREDENTIALS --implicit-dirs observatorio-oncologia ${{ github.workspace }}/output-files
           # gcsfuse  --implicit-dirs observatorio-oncologia ${{ github.workspace }}/output-files          
           
           
