@@ -45,8 +45,6 @@ RUN mkdir ${HOME}/output-files
 RUN chmod o+w ${HOME}/output-files/.
 
 
-
-
 # Install gcsfuse.
 # RUN echo "deb http://packages.cloud.google.com/apt gcsfuse-bionic main" | tee /etc/apt/sources.list.d/gcsfuse.list
 # RUN apt-get install apt-transport-https ca-certificates gnupg
@@ -81,6 +79,13 @@ RUN gcc blast.c blast-dbf.c -o ../dbc-2-dbf
 WORKDIR ${HOME}/auto-get-files
 RUN chmod +x dbc-2-dbf
 
-USER developer
+# USER developer
+
+ARG USER_ID
+ARG GROUP_ID
+
+RUN addgroup --gid $GROUP_ID user
+RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user
+USER user
 
 CMD [ "python","-u", "./main.py"]
