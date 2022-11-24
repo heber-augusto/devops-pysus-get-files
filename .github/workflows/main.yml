@@ -21,6 +21,8 @@ jobs:
           credentials_json: '${{ secrets.gcp_credentials }}'
       - name: Create output-files dir
         run: |
+          echo "USER_ID: $(id -u)"
+          echo "GROUP_ID: $(id -g)"         
           mkdir ${{ github.workspace }}/output-files           
       - name: 'install gcsfuse to access bucket'
         run: |
@@ -50,11 +52,13 @@ jobs:
           docker compose build
       - name: Run docker image
         working-directory: ./
-        run: docker run --mount type=bind,source=${{ github.workspace }}/output-files/test,target=/home/developer/output-files -e "STATE=ES" -e "YEAR=2019" -e "MONTH=11" docker.io/library/docker-auto-get-files        
+        run: |
+          mkdir ${{ github.workspace }}/output-files/test/bla                
+          docker run --mount type=bind,source=${{ github.workspace }}/output-files/test,target=/home/developer/output-files -e "STATE=ES" -e "YEAR=2019" -e "MONTH=11" docker.io/library/docker-auto-get-files        
       - name: List downloaded files
         run: |
           ls ${{ github.workspace }}/output-files/test
-          mkdir ${{ github.workspace }}/output-files/test/bla
+          
       #- name: 'upload file to google storage'
       #  uses: 'google-github-actions/upload-cloud-storage@v1'
       #  with:
