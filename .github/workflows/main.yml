@@ -1,6 +1,20 @@
 name: Download files from SUS FTP
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: [push]
+on: 
+  workflow_dispatch:
+    inputs:
+      state:
+        description: 'State to collect files'
+        required: true
+        default: 'ES'
+      year:
+        description: 'Year from files'
+        required: true
+        default: '2019'
+      month:
+        description: 'Month from files'
+        required: true
+        default: '11'    
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
@@ -57,9 +71,9 @@ jobs:
           chmod +x dbc-2-dbf
           export OUTPUT_DIR=${{ github.workspace }}/output-files/monitor
           export TEMP_DIR=${{ github.workspace }}/temp-files          
-          export STATE=ES
-          export YEAR=2019
-          export MONTH=11
+          export STATE=${{ github.event.inputs.state}}
+          export YEAR=${{ github.event.inputs.year}}
+          export MONTH=${{ github.event.inputs.month}}
           export DBC_DIR=${TEMP_DIR}/dbc-files
           export DBF_DIR=${TEMP_DIR}/dbf-files
           export CSV_DIR=${TEMP_DIR}/csv-files  
