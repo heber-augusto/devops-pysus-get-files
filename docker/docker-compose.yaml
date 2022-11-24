@@ -4,9 +4,6 @@ services:
     build:
       context: ".."
       dockerfile: docker/Dockerfile
-      args:
-       - USER_ID
-       - GROUP_ID
     hostname: sus-auto-get-files
     container_name: sus-auto-get-files
     privileged: true
