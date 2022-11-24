@@ -3,18 +3,15 @@ run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: 
   workflow_dispatch:
     inputs:
-      state:
-        description: 'State to collect files'
-        required: true
-        default: 'ES'
-      year:
-        description: 'Year from files'
-        required: true
-        default: '2019'
-      month:
-        description: 'Month from files'
-        required: true
-        default: '11'    
+      states:
+        description: 'States to collect files'
+        required: false
+      start_date:
+        description: 'Start date (YYYY-MM-DD)'
+        required: false
+      end_date:
+        description: 'End date (YYYY-MM-DD)'
+        required: false  
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
@@ -71,15 +68,19 @@ jobs:
           chmod +x dbc-2-dbf
           export OUTPUT_DIR=${{ github.workspace }}/output-files/monitor
           export TEMP_DIR=${{ github.workspace }}/temp-files          
-          export STATE=${{ github.event.inputs.state}}
-          export YEAR=${{ github.event.inputs.year}}
-          export MONTH=${{ github.event.inputs.month}}
           export DBC_DIR=${TEMP_DIR}/dbc-files
           export DBF_DIR=${TEMP_DIR}/dbf-files
           export CSV_DIR=${TEMP_DIR}/csv-files  
           
           pip3 install -r ../requirements.txt
+          export STATES=${{ github.event.inputs.states}}
+          export START_DATE=${{ github.event.inputs.start_date}}
+          export END_DATE=${{ github.event.inputs.end_date}}          
           python3 ./utils/collect_parameters.py
+          # export STATE=${{ github.event.inputs.state}}
+          # export YEAR=${{ github.event.inputs.year}}
+          # export MONTH=${{ github.event.inputs.month}}
+          
           # python3 ./main.py
 
       - run: echo "🍏 This job's status is ${{ job.status }}."      
