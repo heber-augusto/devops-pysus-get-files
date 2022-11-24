@@ -43,8 +43,8 @@ jobs:
       - name: Build docker image
         working-directory: ./docker
         run: |
-          RUN echo "USER_ID: $(id -u)"
-          RUN echo "GROUP_ID: $(id -g)"        
+          echo "USER_ID: $(id -u)"
+          echo "GROUP_ID: $(id -g)"        
           export USER_ID=$(id -u)
           export GROUP_ID=$(id -g) 
           docker compose build
