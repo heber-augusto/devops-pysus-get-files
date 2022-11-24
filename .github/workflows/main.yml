@@ -78,9 +78,14 @@ jobs:
           export START_DATE=${{ github.event.inputs.start_date}}
           export END_DATE=${{ github.event.inputs.end_date}}          
           python3 ./utils/collect_parameters.py > $TEMP_DIR/collect_parameters.txt
-          
+
+
           while IFS= read -r line; do
               echo "Text read from file: $line"
+              IFS=; read -r state year month <<< $line
+              echo "state: $state"                            
+              echo "year: $year"                            
+              echo "month: $month"              
           done < $TEMP_DIR/collect_parameters.txt          
           
           
