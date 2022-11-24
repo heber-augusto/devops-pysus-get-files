@@ -57,7 +57,7 @@ jobs:
       #    # mkdir ${{ github.workspace }}/output-files/test/bla                
       #    docker run -u $(id -u ${USER}):fuse --mount type=bind,source=${{ github.workspace }}/output-files/test,target=/home/developer/output-files -e "STATE=ES" -e "YEAR=2019" -e "MONTH=11" docker.io/library/docker-auto-get-files        
       - name: Prepare permissions, scripts and call script to collect files
-        working-directory: ./auto-get-file
+        working-directory: ./auto-get-files
         run: |
           chmod +x collect_from_ftp.sh
           cd ./blast
