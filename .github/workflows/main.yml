@@ -34,7 +34,7 @@ jobs:
           sudo usermod -a -G fuse $USER
           sudo chown $USER_ID:fuse ${{ github.workspace }}/output-files
           
-          gcsfuse --dir-mode=777 --file-mode=777 --key-file=$GOOGLE_APPLICATION_CREDENTIALS --implicit-dirs observatorio-oncologia ${{ github.workspace }}/output-files
+          gcsfuse -o rw,noauto --dir-mode=777 --file-mode=777 --key-file=$GOOGLE_APPLICATION_CREDENTIALS --implicit-dirs observatorio-oncologia ${{ github.workspace }}/output-files
           # gcsfuse  --implicit-dirs observatorio-oncologia ${{ github.workspace }}/output-files          
           
           
@@ -46,7 +46,7 @@ jobs:
         working-directory: ./
         run: |
           # mkdir ${{ github.workspace }}/output-files/test/bla                
-          docker run -u $(id -u) --mount type=bind,source=${{ github.workspace }}/output-files/test,target=/home/developer/output-files -e "STATE=ES" -e "YEAR=2019" -e "MONTH=11" docker.io/library/docker-auto-get-files        
+          docker run -u root --mount type=bind,source=${{ github.workspace }}/output-files/test,target=/home/developer/output-files -e "STATE=ES" -e "YEAR=2019" -e "MONTH=11" docker.io/library/docker-auto-get-files        
       - name: List downloaded files
         run: |
           ls ${{ github.workspace }}/output-files/test
