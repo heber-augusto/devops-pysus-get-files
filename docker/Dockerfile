@@ -10,25 +10,15 @@ RUN apt-get -qq update --yes \
   && apt-get -qq install --yes --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
-ARG USER_ID
-ARG GROUP_ID
-
-RUN echo "USER_ID: $USER_ID"
-RUN echo "GROUP_ID: $GROUP_ID"
-
-RUN addgroup --gid $GROUP_ID user
-RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user
-
-RUN useradd -ms /bin/bash $USER_ID
-# RUN useradd -ms /bin/bash developer
+RUN useradd -ms /bin/bash developer
 
 RUN pip install --upgrade pip
 
 COPY ./requirements.txt ./requirements.txt
 RUN pip3 install -r ./requirements.txt
 
-# Set home to $USER_ID
-ENV HOME /home/$USER_ID
+# Set home to developer
+ENV HOME /home/developer
 # Allow the application to execute as any UID 
 # and still write temporary data to /tmp
 ENV APP_TMP_DATA=/tmp
@@ -53,7 +43,9 @@ RUN mkdir ${HOME}/csv-files
 RUN chmod o+w ${HOME}/csv-files/.
 RUN mkdir ${HOME}/output-files
 RUN chmod o+w ${HOME}/output-files/.
-RUN chown $USER_ID:$GROUP_ID ${HOME}/output-files/.
+
+
+
 
 # Install gcsfuse.
 # RUN echo "deb http://packages.cloud.google.com/apt gcsfuse-bionic main" | tee /etc/apt/sources.list.d/gcsfuse.list
@@ -89,6 +81,6 @@ RUN gcc blast.c blast-dbf.c -o ../dbc-2-dbf
 WORKDIR ${HOME}/auto-get-files
 RUN chmod +x dbc-2-dbf
 
-# USER developer
-USER user
+USER developer
+
 CMD [ "python","-u", "./main.py"]
