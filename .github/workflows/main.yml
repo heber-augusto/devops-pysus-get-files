@@ -82,9 +82,9 @@ jobs:
 
           while IFS= read -r line; do
               echo "Text read from file: $line"
-              state=$(echo $line | cut -f1 -d;)
-              year=$(echo $line | cut -f2 -d;)
-              month=$(echo $line | cut -f3 -d;)
+              state=$(echo $line | cut -f 1 -d ';')
+              year=$(echo $line | cut -f 2 -d ';')
+              month=$(echo $line | cut -f 3 -d ';')
               echo "state: $state"                            
               echo "year: $year"                            
               echo "month: $month"              
