@@ -85,16 +85,14 @@ jobs:
               state=$(echo $line | cut -f 1 -d ';')
               year=$(echo $line | cut -f 2 -d ';')
               month=$(echo $line | cut -f 3 -d ';')
-              echo "state: $state"                            
-              echo "year: $year"                            
-              echo "month: $month"              
+              # echo "state: $state"                            
+              # echo "year: $year"                            
+              # echo "month: $month"              
+              export STATE=$state
+              export YEAR=$year
+              export MONTH=$month
+          
+              python3 ./main.py
           done < $TEMP_DIR/collect_parameters.txt          
-          
-          
-          # export STATE=${{ github.event.inputs.state}}
-          # export YEAR=${{ github.event.inputs.year}}
-          # export MONTH=${{ github.event.inputs.month}}
-          
-          # python3 ./main.py
 
       - run: echo "🍏 This job's status is ${{ job.status }}."      
