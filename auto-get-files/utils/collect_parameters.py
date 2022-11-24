@@ -17,7 +17,7 @@ def print_parameters():
     try:
         end_dt = datetime.strptime(END_DATE,'%Y-%m-%d')
     except ValueError:
-        strt_dt = DEF_END_DATE                
+        end_dt = DEF_END_DATE                
         pass      
     states = STATES.split(',')
 
