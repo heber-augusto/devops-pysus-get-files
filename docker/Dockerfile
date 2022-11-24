@@ -42,7 +42,7 @@ RUN echo "GROUP_ID: $GROUP_ID"
 
 RUN addgroup --gid $GROUP_ID user
 RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user
-USER user
+
 
 #create folder to receive dbc, dbf, csv and parquet files
 RUN mkdir ${HOME}/dbc-files
@@ -53,7 +53,7 @@ RUN mkdir ${HOME}/csv-files
 RUN chmod o+w ${HOME}/csv-files/.
 RUN mkdir ${HOME}/output-files
 RUN chmod o+w ${HOME}/output-files/.
-
+chown $USER_ID:$GROUP_ID ${HOME}/output-files/.
 
 # Install gcsfuse.
 # RUN echo "deb http://packages.cloud.google.com/apt gcsfuse-bionic main" | tee /etc/apt/sources.list.d/gcsfuse.list
@@ -90,5 +90,5 @@ WORKDIR ${HOME}/auto-get-files
 RUN chmod +x dbc-2-dbf
 
 # USER developer
-
+USER user
 CMD [ "python","-u", "./main.py"]
