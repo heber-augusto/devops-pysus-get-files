@@ -12,7 +12,10 @@ on:
         required: false
       end_date:
         description: 'End date (YYYY-MM-DD)'
-        required: false  
+        required: false
+    # agendamento para execucao todo dia 1 do mês
+  schedule:
+    - cron:  '0 8 1 * *'
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
