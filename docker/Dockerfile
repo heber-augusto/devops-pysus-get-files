@@ -34,6 +34,16 @@ ENV APP_TMP_DATA=/tmp
 #install wget
 RUN apt-get install wget
 
+ARG USER_ID
+ARG GROUP_ID
+
+RUN echo "USER_ID: $USER_ID"
+RUN echo "GROUP_ID: $GROUP_ID"
+
+RUN addgroup --gid $GROUP_ID user
+RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user
+USER user
+
 #create folder to receive dbc, dbf, csv and parquet files
 RUN mkdir ${HOME}/dbc-files
 RUN chmod o+w ${HOME}/dbc-files/.
@@ -80,15 +90,5 @@ WORKDIR ${HOME}/auto-get-files
 RUN chmod +x dbc-2-dbf
 
 # USER developer
-
-ARG USER_ID
-ARG GROUP_ID
-
-RUN echo "USER_ID: $USER_ID"
-RUN echo "GROUP_ID: $GROUP_ID"
-
-RUN addgroup --gid $GROUP_ID user
-RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user
-USER user
 
 CMD [ "python","-u", "./main.py"]
