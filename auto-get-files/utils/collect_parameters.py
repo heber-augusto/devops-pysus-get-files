@@ -4,7 +4,7 @@ from dateutil.rrule import rrule, MONTHLY
 import os
 
 DEF_START_DATE = (date.today() + relativedelta(months=-5))
-DEF_END_DATE = (date.today())
+DEF_END_DATE = (date.today() + relativedelta(months=-1))
 def print_parameters():
     START_DATE = (os.getenv('START_DATE', DEF_START_DATE.strftime('%Y-%m-%d')))
     END_DATE = (os.getenv('END_DATE', DEF_END_DATE.strftime('%Y-%m-%d')))
