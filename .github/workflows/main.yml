@@ -64,12 +64,11 @@ jobs:
           gcc blast.c blast-dbf.c -o ../dbc-2-dbf
           cd ..
           chmod +x dbc-2-dbf
-          export OUTPUT_DIR=${{ github.workspace }}/output-files
+          export OUTPUT_DIR=${{ github.workspace }}/output-files/monitor
           export TEMP_DIR=${{ github.workspace }}/temp-files          
           export STATE=ES
           export YEAR=2019
           export MONTH=11
-          export YEAR=2019          
           export DBC_DIR=${TEMP_DIR}/dbc-files
           export DBF_DIR=${TEMP_DIR}/dbf-files
           export CSV_DIR=${TEMP_DIR}/csv-files  
