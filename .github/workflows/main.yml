@@ -19,9 +19,19 @@ jobs:
         uses: 'google-github-actions/auth@v1'
         with:
           credentials_json: '${{ secrets.gcp_credentials }}'
-      - name: Create output-files dir
-        run: |         
-          mkdir ${{ github.workspace }}/output-files           
+      - name: Create output and temp dir
+        run: |  
+          export OUTPUT_DIR=${{ github.workspace }}/output-files
+          export TEMP_DIR=${{ github.workspace }}/temp-files          
+          mkdir ${OUTPUT_DIR}
+          mkdir ${TEMP_DIR}
+          mkdir ${TEMP_DIR}/dbc-files
+          chmod o+w  ${TEMP_DIR}/dbc-files/.
+          mkdir ${TEMP_DIR}/dbf-files
+          chmod o+w ${TEMP_DIR}/dbf-files/.
+          mkdir ${TEMP_DIR}/csv-files
+          chmod o+w ${TEMP_DIR}/csv-files/.          
+
       - name: 'install gcsfuse to access bucket'
         run: |
           export GCSFUSE_REPO=gcsfuse-`lsb_release -c -s`
@@ -37,16 +47,35 @@ jobs:
           gcsfuse --dir-mode=777 --file-mode=777 --key-file=$GOOGLE_APPLICATION_CREDENTIALS --implicit-dirs observatorio-oncologia ${{ github.workspace }}/output-files
           # gcsfuse  --implicit-dirs observatorio-oncologia ${{ github.workspace }}/output-files          
           
+      #- name: Build docker image
+      #  working-directory: ./docker
+      #  run: |
+      #    docker compose build
+      #- name: Run docker image
+      #  working-directory: ./
+      #  run: |
+      #    # mkdir ${{ github.workspace }}/output-files/test/bla                
+      #    docker run -u $(id -u ${USER}):fuse --mount type=bind,source=${{ github.workspace }}/output-files/test,target=/home/developer/output-files -e "STATE=ES" -e "YEAR=2019" -e "MONTH=11" docker.io/library/docker-auto-get-files        
+      - name: Prepare permissions, scripts and call script to collect files
+        working-directory: ./auto-get-file
+        run: |
+          chmod +x collect_from_ftp.sh
+          cd ./blast
+          gcc blast.c blast-dbf.c -o ../dbc-2-dbf
+          cd ..
+          chmod +x dbc-2-dbf
+
+          export STATE=ES
+          export YEAR=2019
+          export MONTH=11
+          export YEAR=2019          
+          export DBC_DIR=${TEMP_DIR}/dbc-files
+          export DBF_DIR=${TEMP_DIR}/dbf-files
+          export CSV_DIR=${TEMP_DIR}/csv-files  
           
-      - name: Build docker image
-        working-directory: ./docker
-        run: |
-          docker compose build
-      - name: Run docker image
-        working-directory: ./
-        run: |
-          # mkdir ${{ github.workspace }}/output-files/test/bla                
-          docker run -u $(id -u ${USER}):fuse --mount type=bind,source=${{ github.workspace }}/output-files/test,target=/home/developer/output-files -e "STATE=ES" -e "YEAR=2019" -e "MONTH=11" docker.io/library/docker-auto-get-files        
+          pip3 install -r ../requirements.txt
+          
+          # python3 ./main.py
       - name: List downloaded files
         run: |
           ls ${{ github.workspace }}/output-files/test
