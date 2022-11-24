@@ -46,7 +46,7 @@ jobs:
         working-directory: ./
         run: |
           # mkdir ${{ github.workspace }}/output-files/test/bla                
-          docker run -u root --mount type=bind,source=${{ github.workspace }}/output-files/test,target=/home/developer/output-files -e "STATE=ES" -e "YEAR=2019" -e "MONTH=11" docker.io/library/docker-auto-get-files        
+          docker run -u $(id -u ${USER}):$(id -g fuse) --mount type=bind,source=${{ github.workspace }}/output-files/test,target=/home/developer/output-files -e "STATE=ES" -e "YEAR=2019" -e "MONTH=11" docker.io/library/docker-auto-get-files        
       - name: List downloaded files
         run: |
           ls ${{ github.workspace }}/output-files/test
