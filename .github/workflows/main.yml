@@ -6,6 +6,7 @@ on:
       states:
         description: 'States to collect files'
         required: false
+        default: 'SP'
       start_date:
         description: 'Start date (YYYY-MM-DD)'
         required: false
