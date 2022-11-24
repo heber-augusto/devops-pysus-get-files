@@ -53,7 +53,7 @@ RUN mkdir ${HOME}/csv-files
 RUN chmod o+w ${HOME}/csv-files/.
 RUN mkdir ${HOME}/output-files
 RUN chmod o+w ${HOME}/output-files/.
-chown $USER_ID:$GROUP_ID ${HOME}/output-files/.
+RUN chown $USER_ID:$GROUP_ID ${HOME}/output-files/.
 
 # Install gcsfuse.
 # RUN echo "deb http://packages.cloud.google.com/apt gcsfuse-bionic main" | tee /etc/apt/sources.list.d/gcsfuse.list
