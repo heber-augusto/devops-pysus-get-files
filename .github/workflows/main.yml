@@ -25,12 +25,13 @@ jobs:
       - name: 'install gcsfuse to access bucket'
         run: |
           export GCSFUSE_REPO=gcsfuse-`lsb_release -c -s`
+          export USER=$(id -u)          
+          echo "USER: $USER"          
           echo "deb https://packages.cloud.google.com/apt $GCSFUSE_REPO main" | sudo tee /etc/apt/sources.list.d/gcsfuse.list
           curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
           sudo apt-get update
           sudo apt-get install gcsfuse
           sudo groupadd fuse
-          export USER=$(id -u)
           sudo usermod -a -G fuse $USER
           sudo chown $USER:fuse ${{ github.workspace }}/output-files
           # gcsfuse  -o allow_other --dir-mode=777 --file-mode=777 --implicit-dirs observatorio-oncologia ${{ github.workspace }}/output-files
