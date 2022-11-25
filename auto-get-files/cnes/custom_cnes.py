@@ -88,13 +88,13 @@ def get_files_to_download(
                 'file_size': file_size,
                 'file_name': file_name,
             }
-        print(f'Files found inside ftp {generic_path}->{gname}: {fdicts}')
+        print(f'Files found inside ftp {generic_path}->{gname}: {len(fdicts)}')
         for month in months:
             try:
                 fname = f"{gname}{state}{year2.zfill(2)}{month}.dbc"
                 print(f'checking if file {fname} exists')
                 files = []
-                if fname in fdicts:
+                if fname not in fdicts:
                     for l in ['a', 'b', 'c', 'd', 'e', 'f']:
                         nm, ext = fname.split('.')
                         file_name = f'{nm}{l}.{ext}'
