@@ -75,13 +75,16 @@ def check_file_already_processed(
 
 
 for file_type,file_groups in file_group_per_type.items():
+    print(f'Listing files from {file_type} type')
     get_file = func_per_type[file_type]
     ftp_files = get_file(state, year, month, groups=file_groups)
+    print(f'Got {len(ftp_files)} from {file_type}')
     # print(ftp_files)
     for file_group in ftp_files:
+        print(f'Collecting files from {file_group}')
         for ftp_file_dict in file_group['ftp_paths']:
             ftp_file = ftp_file_dict['ftp_path']
-
+            print(f'checking file {ftp_file}')
             filename = os.path.basename(ftp_file)
             nm, ext = filename.split('.')
             dbf_file_path = f'{dbf_dir}/{nm}.dbf'
