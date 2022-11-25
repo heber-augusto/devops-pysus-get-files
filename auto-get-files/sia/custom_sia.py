@@ -111,45 +111,48 @@ def get_files_to_download(
         }
 
         for month in months:
-            # Check available
-            input_date = date(int(year), int(month), 1)
-            available_date = date(group_dict[gname][2], group_dict[gname][1], 1)
-            if input_date < available_date:
-                # NOTE: raise Warning instead of ValueError for
-                # backwards-compatibility with older behavior of returning
-                # (PA, None) for calls after 1994 and before Jan, 2008
-                warnings.warn(
-                    f"SIA does not contain data for {gname} "
-                    f"before {available_date:%d/%m/%Y}"
-                )
+            try:
+                # Check available
+                input_date = date(int(year), int(month), 1)
+                available_date = date(group_dict[gname][2], group_dict[gname][1], 1)
+                if input_date < available_date:
+                    # NOTE: raise Warning instead of ValueError for
+                    # backwards-compatibility with older behavior of returning
+                    # (PA, None) for calls after 1994 and before Jan, 2008
+                    warnings.warn(
+                        f"SIA does not contain data for {gname} "
+                        f"before {available_date:%d/%m/%Y}"
+                    )
+                    continue
+
+                fname = f"{gname}{state}{year2.zfill(2)}{month}.dbc"
+                files = []
+                if fname not in fdicts:
+                    for l in ['a', 'b', 'c', 'd', 'e', 'f']:
+                        nm, ext = fname.split('.')
+                        file_name = f'{nm}{l}.{ext}'
+                        if file_name in fdicts:
+                            files.append(fdicts[file_name])
+                else:
+                    files = [fdicts[fname],]
+
+                for fdict in files:
+                    file_name = fdict['file_name']
+                    ftp_path = f"{file_prefix}/{file_name}"
+                    ftp_file_dict = {
+                        'ftp_path':ftp_path,
+                        'state':state,
+                        'year':year,
+                        'month':month,
+                        'file_group':gname,
+                        'file_date' : fdict['file_date'],
+                        'file_time' : fdict['file_time'],
+                        'file_size' : fdict['file_size'],
+                        'file_name' : file_name,
+                    }
+                    ftp_paths_dict['ftp_paths'].append(ftp_file_dict)
+            except:
                 continue
-            
-            fname = f"{gname}{state}{year2.zfill(2)}{month}.dbc"
-            files = []
-            if fname not in fdicts:
-                for l in ['a', 'b', 'c', 'd', 'e', 'f']:
-                    nm, ext = fname.split('.')
-                    file_name = f'{nm}{l}.{ext}'
-                    if file_name in fdicts:
-                        files.append(fdicts[file_name])
-            else:
-                files = [fdicts[fname],]
-            
-            for fdict in files:
-                file_name = fdict['file_name']
-                ftp_path = f"{file_prefix}/{file_name}"
-                ftp_file_dict = {
-                    'ftp_path':ftp_path,
-                    'state':state,
-                    'year':year,
-                    'month':month,
-                    'file_group':gname,
-                    'file_date' : fdict['file_date'],
-                    'file_time' : fdict['file_time'],
-                    'file_size' : fdict['file_size'],
-                    'file_name' : file_name,
-                }
-                ftp_paths_dict['ftp_paths'].append(ftp_file_dict)
         list_of_ftp_paths.append(ftp_paths_dict)
     return list_of_ftp_paths
 
