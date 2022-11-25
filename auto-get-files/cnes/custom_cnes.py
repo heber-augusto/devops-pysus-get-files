@@ -62,7 +62,7 @@ def get_files_to_download(
         gname = gname.upper()
 
         ftp_paths_dict = {
-            'type':f"SIA-{gname}",
+            'type':f"CNES-{gname}",
             'ftp_paths':[]
         }
 
