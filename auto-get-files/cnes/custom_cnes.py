@@ -90,33 +90,36 @@ def get_files_to_download(
             }
 
         for month in months:
-            fname = f"{gname}{state}{year2.zfill(2)}{month}.dbc"
-            files = []
-            if fname in fdicts:
-                for l in ['a', 'b', 'c', 'd', 'e', 'f']:
-                    nm, ext = fname.split('.')
-                    file_name = f'{nm}{l}.{ext}'
-                    if file_name in flist:
-                        files.append(fdicts[file_name])
-            else:
-                files = [fdicts[fname],]
-            for fdict in files:
-                file_name = fdict['file_name']
-                ftp_path = f"{path}/{file_name}"
-                ftp_file_dict = {
-                    'ftp_path':ftp_path,
-                    'state':state,
-                    'year':year,
-                    'month':month,
-                    'file_group':gname,
-                    'file_date' : fdict['file_date'],
-                    'file_time' : fdict['file_time'],
-                    'file_size' : fdict['file_size'],
-                    'file_name' : file_name,
-                }
+            try:
+                fname = f"{gname}{state}{year2.zfill(2)}{month}.dbc"
+                files = []
+                if fname in fdicts:
+                    for l in ['a', 'b', 'c', 'd', 'e', 'f']:
+                        nm, ext = fname.split('.')
+                        file_name = f'{nm}{l}.{ext}'
+                        if file_name in flist:
+                            files.append(fdicts[file_name])
+                else:
+                    files = [fdicts[fname],]
+                for fdict in files:
+                    file_name = fdict['file_name']
+                    ftp_path = f"{path}/{file_name}"
+                    ftp_file_dict = {
+                        'ftp_path':ftp_path,
+                        'state':state,
+                        'year':year,
+                        'month':month,
+                        'file_group':gname,
+                        'file_date' : fdict['file_date'],
+                        'file_time' : fdict['file_time'],
+                        'file_size' : fdict['file_size'],
+                        'file_name' : file_name,
+                    }
 
 
-                ftp_paths_dict['ftp_paths'].append(ftp_file_dict)
+                    ftp_paths_dict['ftp_paths'].append(ftp_file_dict)
+            except:
+                continue
         list_of_ftp_paths.append(ftp_paths_dict)
 
     return list_of_ftp_paths
