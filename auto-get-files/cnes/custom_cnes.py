@@ -88,7 +88,7 @@ def get_files_to_download(
                 'file_size': file_size,
                 'file_name': file_name,
             }
-
+        print(f'Files found inside ftp {generic_path}->{gname}: {fdicts}')
         for month in months:
             try:
                 fname = f"{gname}{state}{year2.zfill(2)}{month}.dbc"
