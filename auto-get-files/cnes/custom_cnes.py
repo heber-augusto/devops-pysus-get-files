@@ -92,6 +92,7 @@ def get_files_to_download(
         for month in months:
             try:
                 fname = f"{gname}{state}{year2.zfill(2)}{month}.dbc"
+                print(f'checking if file {fname} exists')
                 files = []
                 if fname in fdicts:
                     for l in ['a', 'b', 'c', 'd', 'e', 'f']:
@@ -104,6 +105,7 @@ def get_files_to_download(
                 for fdict in files:
                     file_name = fdict['file_name']
                     ftp_path = f"{path}/{file_name}"
+                    print(f'Reading file {ftp_path} from ftp')
                     ftp_file_dict = {
                         'ftp_path':ftp_path,
                         'state':state,
