@@ -81,57 +81,71 @@ for file_type,file_groups in file_group_per_type.items():
     print(f'Got {len(ftp_files)} from {file_type}')
     # print(ftp_files)
     for file_group in ftp_files:
-        print(f'Collecting files from {file_group}')
+        # print(f'Collecting files from {file_group}')
         for ftp_file_dict in file_group['ftp_paths']:
-            ftp_file = ftp_file_dict['ftp_path']
-            print(f'checking file {ftp_file}')
-            filename = os.path.basename(ftp_file)
-            nm, ext = filename.split('.')
-            dbf_file_path = f'{dbf_dir}/{nm}.dbf'
-            dbc_file_path = f'{dbc_dir}/{nm}.dbc'
-            csv_file_path = f'{csv_dir}/{nm}.csv'
-            
+            step = 'unknown'
+            try:
+                ftp_file = ftp_file_dict['ftp_path']
+                print(f'checking file {ftp_file}')
+                filename = os.path.basename(ftp_file)
+                nm, ext = filename.split('.')
+                dbf_file_path = f'{dbf_dir}/{nm}.dbf'
+                dbc_file_path = f'{dbc_dir}/{nm}.dbc'
+                csv_file_path = f'{csv_dir}/{nm}.csv'
 
-            # <ESTADO>/<ANO>/<MES>/<TIPO>/<GRUPO>
-            output_file_folder = f"""{ftp_file_dict['state']}/{ftp_file_dict['year']}/{ftp_file_dict['month']}/{file_type}/{ftp_file_dict['file_group']}"""
-            pq_file_dir = f'{output_dir}/{output_file_folder}'
-            completed_file_path = f'{pq_file_dir}/{nm}.done'
-            pq_file_path = f'{pq_file_dir}/{nm}.parquet.gzip'
 
-            # se arquivo ja existe e não tem modificacao, continua para o proximo
-            if (os.path.exists(completed_file_path) == True) and \
-               (check_file_already_processed(completed_file_path , ftp_file_dict) == True):
-                print(f'file {nm} already exists')
+                # <ESTADO>/<ANO>/<MES>/<TIPO>/<GRUPO>
+                output_file_folder = f"""{ftp_file_dict['state']}/{ftp_file_dict['year']}/{ftp_file_dict['month']}/{file_type}/{ftp_file_dict['file_group']}"""
+                pq_file_dir = f'{output_dir}/{output_file_folder}'
+                completed_file_path = f'{pq_file_dir}/{nm}.done'
+                pq_file_path = f'{pq_file_dir}/{nm}.parquet.gzip'
+
+                # se arquivo ja existe e não tem modificacao, continua para o proximo
+                if (os.path.exists(completed_file_path) == True) and \
+                   (check_file_already_processed(completed_file_path , ftp_file_dict) == True):
+                    print(f'file {nm} already exists')
+                    continue
+                step = 'get files from FTP'
+                # get files from FTP
+                output_dbc = subprocess.check_output(['./collect_from_ftp.sh',ftp_file,dbc_dir])
+
+                print('creating dbf file')
+                step = 'convert dbc file to dbf'
+                # convert dbc file to dbf
+                output_dbf = subprocess.check_output(['./dbc-2-dbf',dbc_file_path,dbf_file_path])
+                if remove_intermediate == True:
+                    os.unlink(dbc_file_path)
+
+                print('creating csv file')
+                step = 'convert dbf to csv'
+                # convert dbf to csv
+                dbf_to_csv(dbf_file_path, csv_file_path)
+                if remove_intermediate == True:
+                    os.unlink(dbf_file_path)
+
+                step = 'creating folders for file'
+                print(f'creating folders for file {output_file_folder}')
+                path = Path(pq_file_dir)
+                path.mkdir(parents=True, exist_ok=True)
+
+                step = 'creating parquet file'
+                print(f'creating parquet file {pq_file_path}')
+                # convert csv to parquet
+                csv_to_parquet(csv_file_path, pq_file_path)
+                if remove_intermediate == True:
+                    os.unlink(csv_file_path)
+
+                step = 'saving json done file'
+                print(ftp_file_dict)
+                f = open(completed_file_path, 'w+')
+                f.write(json.dumps(ftp_file_dict))                
+            except:
+                try:
+                    print(f'Erro during step {step} from file {ftp_file}')
+                except:
+                    print(f'Erro during step {step}')
+                    pass
                 continue
-
-            # get files from FTP
-            output_dbc = subprocess.check_output(['./collect_from_ftp.sh',ftp_file,dbc_dir])
-
-            print('creating dbf file')
-            # convert dbc file to dbf
-            output_dbf = subprocess.check_output(['./dbc-2-dbf',dbc_file_path,dbf_file_path])
-            if remove_intermediate == True:
-                os.unlink(dbc_file_path)
-            
-            print('creating csv file')
-            # convert dbf to csv
-            dbf_to_csv(dbf_file_path, csv_file_path)
-            if remove_intermediate == True:
-                os.unlink(dbf_file_path)
-            
-            print(f'creating folders for file {output_file_folder}')
-            path = Path(pq_file_dir)
-            path.mkdir(parents=True, exist_ok=True)
-
-            print(f'creating parquet file {pq_file_path}')
-            # convert csv to parquet
-            csv_to_parquet(csv_file_path, pq_file_path)
-            if remove_intermediate == True:
-                os.unlink(csv_file_path)
-
-            print(ftp_file_dict)
-            f = open(completed_file_path, 'w+')
-            f.write(json.dumps(ftp_file_dict))                
 
 
 fim_processamento = datetime.now()
