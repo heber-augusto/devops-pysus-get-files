@@ -15,7 +15,7 @@ on:
         required: false
     # agendamento para execucao todo dia 1 do mês
   schedule:
-    - cron:  '0 8 1 * *'
+    - cron:  '0 8 1,2 * *'
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
