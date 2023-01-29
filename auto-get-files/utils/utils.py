@@ -1,12 +1,16 @@
+import csv
+import os
+import time
+from datetime import datetime
+import requests
+
 import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
-import os
-import time
-import csv
-from datetime import datetime
 from dbfread import DBF
 
+
+URL_STATES_IBGE = 'https://servicodados.ibge.gov.br/api/v1/localidades/estados/11|12|13|14|15|16|17|21|22|23|24|25|26|27|28|29|31|32|33|35|41|42|43|50|51|52|53/municipios'
 
 def dbf_to_csv(dbf_table_pth, output_path): 
     csv_fn = output_path
@@ -42,3 +46,5 @@ def csv_to_parquet(csv_file, path_parquet):
     parquet_writer.close()
     fim = time.time()
     # print("Executado em: ",fim-ini)
+
+
