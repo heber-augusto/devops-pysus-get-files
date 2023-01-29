@@ -47,4 +47,15 @@ def csv_to_parquet(csv_file, path_parquet):
     fim = time.time()
     # print("Executado em: ",fim-ini)
 
+def get_ibge_data(url=URL_STATES_IBGE):
+    r = requests.get(url)
+    if r.ok:
+        return r.json()
+    else:
+        return f'Error {r.status_code}: {r.reason}'
 
+def get_ibge_states_df(json_file): # add try block to proper deal with typing
+    df = pd.read_json(json_file)
+    df["id_uf"] = df["microrregiao"].apply(lambda x: x["mesorregiao"]["UF"]["id"])
+    df["nome_uf"] = df["microrregiao"].apply(lambda x: x["mesorregiao"]["UF"]["nome"])
+    return df
