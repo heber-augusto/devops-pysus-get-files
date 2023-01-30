@@ -48,7 +48,7 @@ def csv_to_parquet(csv_file, path_parquet):
     # print("Executado em: ",fim-ini)
 
 def get_ibge_data(url=URL_STATES_IBGE):
-    r = requests.get(url)
+   r = get_legacy_session().get(url)
     if r.ok:
         return r.json()
     else:
