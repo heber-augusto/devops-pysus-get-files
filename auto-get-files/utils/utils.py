@@ -58,4 +58,4 @@ def get_ibge_states_df(json_file): # add try block to proper deal with typing
     df = pd.DataFrame(json_file)
     df["id_uf"] = df["microrregiao"].apply(lambda x: x["mesorregiao"]["UF"]["id"])
     df["nome_uf"] = df["microrregiao"].apply(lambda x: x["mesorregiao"]["UF"]["nome"])
-    return df
+    return df[['id', 'nome', 'id_uf', 'nome_uf']]
