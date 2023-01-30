@@ -13,7 +13,7 @@ from sia.custom_sia   import get_files_to_download as sia_get_files
 from cnes.custom_cnes import get_files_to_download as cnes_get_files
 from sih.custom_sih  import get_files_to_download as sih_get_files
 
-from utils.utils import dbf_to_csv, csv_to_parquet
+from utils.utils import dbf_to_csv, csv_to_parquet, get_ibge_data, get_ibge_states_df
 
 
 inicio_processamento = datetime.now()
@@ -30,6 +30,7 @@ dbc_dir = os.getenv('DBC_DIR', os.path.join(home_dir,'dbc-files'))
 dbf_dir = os.getenv('DBF_DIR', os.path.join(home_dir,'dbf-files'))
 csv_dir = os.getenv('CSV_DIR', os.path.join(home_dir,'csv-files'))
 output_dir = os.getenv('OUTPUT_DIR', os.path.join(home_dir,'output-files'))
+ibge_output_dir = f'{output_dir}/ibge_data'
 file_types = os.getenv('FILE_TYPE', 'PA').split(',')
 
 #groups = os.environ['FILE_TYPE']
@@ -72,6 +73,21 @@ def check_file_already_processed(
     return (completed_file_dict['file_size'] == ftp_file_dict['file_size']) and \
            (completed_file_dict['file_date'] == ftp_file_dict['file_date']) and \
            (completed_file_dict['file_time'] == ftp_file_dict['file_time'])
+
+
+IBGE_FILE_PATH = f'{ibge_output_dir}/ibge_cidades.csv'
+if not os.path.isfile(IBGE_FILE_PATH):
+    path = Path(ibge_output_dir)
+    path.mkdir(parents=True, exist_ok=True)
+    get_ibge_states_df(get_ibge_data()).to_csv(
+        IBGE_FILE_PATH, 
+        sep=';', 
+        encoding='utf-8',
+        index=False)
+    print('Loaded IBGE information')
+else:
+    print('IBGE information already loaded')
+
 
 
 for file_type,file_groups in file_group_per_type.items():
