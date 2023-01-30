@@ -55,7 +55,7 @@ def get_ibge_data(url=URL_STATES_IBGE):
         return f'Error {r.status_code}: {r.reason}'
 
 def get_ibge_states_df(json_file): # add try block to proper deal with typing
-    df = pd.read_json(json_file)
+    df = pd.DataFrame(json_file)
     df["id_uf"] = df["microrregiao"].apply(lambda x: x["mesorregiao"]["UF"]["id"])
     df["nome_uf"] = df["microrregiao"].apply(lambda x: x["mesorregiao"]["UF"]["nome"])
     return df
