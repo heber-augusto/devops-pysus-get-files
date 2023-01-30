@@ -76,7 +76,11 @@ def check_file_already_processed(
 
 IBGE_FILE_PATH = f'{output_dir}/ibge_data/ibge_cidades.csv'
 if not os.path.isfile(IBGE_FILE_PATH):
-    get_ibge_states_df(get_ibge_data()).to_csv(IBGE_FILE_PATH, sep=';', encoding='utf-8')
+    get_ibge_states_df(get_ibge_data()).to_csv(
+        IBGE_FILE_PATH, 
+        sep=';', 
+        encoding='utf-8',
+        index=False)
     print('Loaded IBGE information')
 else:
     print('IBGE information already loaded')
