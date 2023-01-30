@@ -30,6 +30,7 @@ dbc_dir = os.getenv('DBC_DIR', os.path.join(home_dir,'dbc-files'))
 dbf_dir = os.getenv('DBF_DIR', os.path.join(home_dir,'dbf-files'))
 csv_dir = os.getenv('CSV_DIR', os.path.join(home_dir,'csv-files'))
 output_dir = os.getenv('OUTPUT_DIR', os.path.join(home_dir,'output-files'))
+ibge_output_dir = f'{output_dir}/ibge_data'
 file_types = os.getenv('FILE_TYPE', 'PA').split(',')
 
 #groups = os.environ['FILE_TYPE']
@@ -74,8 +75,10 @@ def check_file_already_processed(
            (completed_file_dict['file_time'] == ftp_file_dict['file_time'])
 
 
-IBGE_FILE_PATH = f'{output_dir}/ibge_data/ibge_cidades.csv'
+IBGE_FILE_PATH = f'{ibge_output_dir}/ibge_cidades.csv'
 if not os.path.isfile(IBGE_FILE_PATH):
+    path = Path(ibge_output_dir)
+    path.mkdir(parents=True, exist_ok=True)
     get_ibge_states_df(get_ibge_data()).to_csv(
         IBGE_FILE_PATH, 
         sep=';', 
