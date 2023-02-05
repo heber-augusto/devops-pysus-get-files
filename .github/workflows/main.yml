@@ -98,4 +98,5 @@ jobs:
               python3 ./main.py
           done < $TEMP_DIR/collect_parameters.txt          
 
-      - run: echo "🍏 This job's status is ${{ job.status }}."      
+      - run: echo "🍏 This job's status is ${{ job.status }}."
+      - uses: gautamkrishnar/keepalive-workflow@v1 # using the workflow with default settings
