@@ -1,5 +1,5 @@
 name: Download files from SUS FTP
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+run-name: ${{ github.actor }} is collecting data using GitHub Actions 🚀
 on: 
   workflow_dispatch:
     inputs:
@@ -17,7 +17,7 @@ on:
   schedule:
     - cron:  '0 8 1,2,3,4,5 * *'
 jobs:
-  Explore-GitHub-Actions:
+  Collecting-Data-Using-GitHub-Actions:
     runs-on: ubuntu-latest
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
