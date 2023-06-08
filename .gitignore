@@ -20,3 +20,4 @@ bin/
 lib/
 pyvenv.cfg
 *.env
+venv/

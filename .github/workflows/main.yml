@@ -6,7 +6,7 @@ on:
       states:
         description: 'States to collect files'
         required: false
-        default: 'SP'
+        default: 'RO,AC,AM,RR,PA,AP,TO,MA,PI,CE,RN,PB,PE,AL,SE,BA,MG,ES,RJ,SP,PR,SC,RS,MS,MT,GO,DF'
       start_date:
         description: 'Start date (YYYY-MM-DD)'
         required: false
@@ -80,23 +80,7 @@ jobs:
           export STATES=${{ github.event.inputs.states}}
           export START_DATE=${{ github.event.inputs.start_date}}
           export END_DATE=${{ github.event.inputs.end_date}}          
-          python3 ./utils/collect_parameters.py > $TEMP_DIR/collect_parameters.txt
-
-
-          while IFS= read -r line; do
-              echo "Text read from file: $line"
-              state=$(echo $line | cut -f 1 -d ';')
-              year=$(echo $line | cut -f 2 -d ';')
-              month=$(echo $line | cut -f 3 -d ';')
-              # echo "state: $state"                            
-              # echo "year: $year"                            
-              # echo "month: $month"              
-              export STATE=$state
-              export YEAR=$year
-              export MONTH=$month
-          
-              python3 ./main.py
-          done < $TEMP_DIR/collect_parameters.txt          
+          python3 ./main.py
 
       - run: echo "🍏 This job's status is ${{ job.status }}."
       - uses: gautamkrishnar/keepalive-workflow@v1 # using the workflow with default settings
