@@ -2,7 +2,7 @@ import warnings
 from datetime import date
 from ftplib import FTP
 from typing import Dict, List, Tuple, Union
-from custom_get_files.custom_get_files import CustomGetFiles
+from custom_get_files.custom_get_files import CustomGetFtpFiles
 
 group_dict: Dict[str, Tuple[str, int, int]] = {
         "PA": ("Produção Ambulatorial", 7, 1994),
@@ -21,19 +21,17 @@ group_dict: Dict[str, Tuple[str, int, int]] = {
          }
 
 
-class CustomSia(List, CustomGetFiles):
+class CustomSia(CustomGetFtpFiles):
     """
     Downloads SIA data from Datasus FTP server
-    Created on 21/09/18
-    by fccoelho
-    Modified on 18/04/21
-    by bcbernardo
-    license: GPL V3 or Later
+
     """
-    def __int__(self):
-
-        pass
-
+    def __init__(self):
+        self.ftp_files = {} 
+        self.current_year_limit = 2008
+        self.ftp_path = "/dissemin/publicos/SIASUS/200801_/Dados"
+        self.load_ftp_files()
+        print(f'Encontrados {len(self.ftp_files)} arquivos Sia')
 
     def get_files_to_download(self,
                               state: str,
@@ -65,6 +63,8 @@ class CustomSia(List, CustomGetFiles):
             by the , when they are found
         """
         list_of_ftp_paths = []
+        ftp = FTP("ftp.datasus.gov.br")
+        ftp.login()        
 
         state = state.upper()
         year2 = str(year)[-2:]
@@ -79,30 +79,19 @@ class CustomSia(List, CustomGetFiles):
 
         if year >= 1994 and year < 2008:
             file_prefix = "/dissemin/publicos/SIASUS/199407_200712/Dados"
+            new_year_limit = 1992
         elif year >= 2008:
             file_prefix = "/dissemin/publicos/SIASUS/200801_/Dados"
+            new_year_limit = 2008
         else:
             raise ValueError("SIA does not contain data before 1994")
 
-        ftp = FTP("ftp.datasus.gov.br")
-        ftp.login()
-        ftype = "DBC"
+        if self.current_year_limit != new_year_limit:
+            self.current_year_limit = new_year_limit
+            self.ftp_path = file_prefix
+            self.load_ftp_files()
+                            
         ftp.cwd(file_prefix)
-        flist = []
-        fdicts = {}
-        ftp.dir("", flist.append)
-        for file_info in flist:
-            tmp = file_info.split()
-            file_date = tmp[0]
-            file_time = tmp[1]
-            file_size = tmp[2]
-            file_name = tmp[3]
-            fdicts[file_name] = {
-                'file_date': file_date,
-                'file_time': file_time,
-                'file_size': file_size,
-                'file_name': file_name,
-            }
 
         for gname in groups:
             gname = gname.upper()
@@ -132,14 +121,14 @@ class CustomSia(List, CustomGetFiles):
 
                     fname = f"{gname}{state}{year2.zfill(2)}{month}.dbc"
                     files = []
-                    if fname not in fdicts:
+                    if fname not in self.ftp_files:
                         for l in ['a', 'b', 'c', 'd', 'e', 'f']:
                             nm, ext = fname.split('.')
                             file_name = f'{nm}{l}.{ext}'
-                            if file_name in fdicts:
-                                files.append(fdicts[file_name])
+                            if file_name in self.ftp_files:
+                                files.append(self.ftp_files[file_name])
                     else:
-                        files = [fdicts[fname], ]
+                        files = [self.ftp_files[fname], ]
 
                     for fdict in files:
                         file_name = fdict['file_name']

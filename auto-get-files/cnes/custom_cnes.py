@@ -1,14 +1,20 @@
 from ftplib import FTP
 from typing import List, Union
-from custom_get_files.custom_get_files import CustomGetFiles
+from custom_get_files.custom_get_files import CustomGetFtpFiles
 
 generic_path = "/dissemin/publicos/CNES/200508_/Dados"
+CNES_GROUPS = ['DC','EP','EQ','HB','IN','LT','PF','RC','SR','ST']
 
+class CustomCnes(CustomGetFtpFiles):
 
-class CustomCnes(CustomGetFiles):
+    def __init__(self):
+        self.ftp_files = {}
+        for gname in CNES_GROUPS:
+            gname = gname.upper()
 
-    def __init(self):
-        pass
+            self.ftp_path = f'{generic_path}/{gname}'
+            self.load_ftp_files()
+        print(f'Encontrados {len(self.ftp_files)} arquivos CNES')
 
     def get_files_to_download(
             self,
@@ -57,10 +63,7 @@ class CustomCnes(CustomGetFiles):
         ftp = FTP("ftp.datasus.gov.br")
         ftp.login()
 
-        if year >= 1994 and year < 2008:
-            ftp.cwd(generic_path)
-
-        elif year >= 2008:
+        if year >= 1994:
             ftp.cwd(generic_path)
         else:
             raise ValueError("CNES does not contain data before 1994")
@@ -80,36 +83,21 @@ class CustomCnes(CustomGetFiles):
             ftp.cwd(gname)
             path = ftp.pwd()
 
-            # flist = ftp.nlst()
-            flist = []
-            fdicts = {}
-            ftp.dir("", flist.append)
-            for file_info in flist:
-                tmp = file_info.split()
-                file_date = tmp[0]
-                file_time = tmp[1]
-                file_size = tmp[2]
-                file_name = tmp[3]
-                fdicts[file_name] = {
-                    'file_date': file_date,
-                    'file_time': file_time,
-                    'file_size': file_size,
-                    'file_name': file_name,
-                }
+
             #print(f'Files found inside ftp {generic_path}->{gname}: {len(fdicts)}')
             for month in months:
                 try:
                     fname = f"{gname}{state}{year2.zfill(2)}{month}.dbc"
                     #print(f'checking if file {fname} exists')
                     files = []
-                    if fname not in fdicts:
+                    if fname not in self.ftp_files:
                         for l in ['a', 'b', 'c', 'd', 'e', 'f']:
                             nm, ext = fname.split('.')
                             file_name = f'{nm}{l}.{ext}'
-                            if file_name in flist:
-                                files.append(fdicts[file_name])
+                            if file_name in self.ftp_files:
+                                files.append(self.ftp_files[file_name])
                     else:
-                        files = [fdicts[fname], ]
+                        files = [self.ftp_files[fname], ]
                     for fdict in files:
                         file_name = fdict['file_name']
                         ftp_path = f"{path}/{file_name}"

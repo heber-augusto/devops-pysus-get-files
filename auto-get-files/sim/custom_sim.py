@@ -6,15 +6,20 @@ import warnings
 from datetime import date
 from ftplib import FTP
 from typing import Dict, List, Tuple, Union
-from custom_get_files.custom_get_files import CustomGetFiles
+from custom_get_files.custom_get_files import CustomGetFtpFiles
 
 
 
-class CustomSim(CustomGetFiles):
+class CustomSim(CustomGetFtpFiles):
     def __init__(self):
         self.group_dict: Dict[str, Tuple[str, str, int, int]] = {
             "DORES": ("DO", "Declarações de óbitos por residência", 1996),
-        }   
+        }
+        self.ftp_files = {}
+        self.current_year_limit = 1996
+        self.ftp_path = "/dissemin/publicos/SIM/CID10/DORES"
+        self.load_ftp_files()
+        print(f'Encontrados {len(self.ftp_files)} arquivos Sim')       
 
     def get_files_to_download(
             self,
@@ -56,23 +61,6 @@ class CustomSim(CustomGetFiles):
 
         ftp = FTP("ftp.datasus.gov.br")
         ftp.login()
-        ftype = "DBC"
-        ftp.cwd(file_prefix)
-        flist = []
-        fdicts = {}
-        ftp.dir("", flist.append)
-        for file_info in flist:
-            tmp = file_info.split()
-            file_date = tmp[0]
-            file_time = tmp[1]
-            file_size = tmp[2]
-            file_name = tmp[3]
-            fdicts[file_name] = {
-                'file_date': file_date,
-                'file_time': file_time,
-                'file_size': file_size,
-                'file_name': file_name,
-            }
 
         for gname in groups:
             gname = gname.upper()
@@ -99,14 +87,14 @@ class CustomSim(CustomGetFiles):
 
                     fname = f"{self.group_dict[gname][0]}{state}{year}.dbc"
                     files = []
-                    if fname not in fdicts:
+                    if fname not in self.ftp_files:
                         for l in ['a', 'b', 'c', 'd', 'e', 'f']:
                             nm, ext = fname.split('.')
                             file_name = f'{nm}{l}.{ext}'
-                            if file_name in fdicts:
-                                files.append(fdicts[file_name])
+                            if file_name in self.ftp_files:
+                                files.append(self.ftp_files[file_name])
                     else:
-                        files = [fdicts[fname],]
+                        files = [self.ftp_files[fname],]
 
                     for fdict in files:
                         file_name = fdict['file_name']
