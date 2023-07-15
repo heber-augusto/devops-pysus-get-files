@@ -2,3 +2,6 @@ pandas
 wget
 pyarrow
 dbfread
+urllib3
+numpy
+requests
