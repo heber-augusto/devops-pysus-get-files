@@ -2,6 +2,12 @@ import urllib3
 import json
 import pandas as pd
 import requests
+from urllib3.util.ssl_ import create_urllib3_context
+
+ctx = create_urllib3_context()
+ctx.load_default_certs()
+ctx.options |= 0x4  # ssl.OP_LEGACY_SERVER_CONNECT
+
 
 class CustomIbge():
     def __int__(self,
@@ -10,7 +16,7 @@ class CustomIbge():
 
     def get_metadata_list(self) -> list:
 
-        http = urllib3.PoolManager()
+        http = urllib3.PoolManager(ssl_context=ctx)
 
         urlApiIBGE = f'https://servicodados.ibge.gov.br/api/v3/agregados/{self.agregador}/metadados'
         response = http.request('GET', urlApiIBGE)
@@ -31,7 +37,7 @@ class CustomIbge():
 
     def get_files_to_download(self, ids):
 
-        http = urllib3.PoolManager()
+        http = urllib3.PoolManager(ssl_context=ctx)
 
         lista_resultados = []
 
