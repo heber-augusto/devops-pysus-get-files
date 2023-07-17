@@ -12,7 +12,7 @@ class CustomIbge():
 
         http = urllib3.PoolManager()
 
-        urlApiIBGE = f'http://servicodados.ibge.gov.br/api/v3/agregados/{self.agregador}/metadados'
+        urlApiIBGE = f'https://servicodados.ibge.gov.br/api/v3/agregados/{self.agregador}/metadados'
         response = http.request('GET', urlApiIBGE)
         data_response = response.data.decode('utf-8')
         data_json = json.loads(data_response)
@@ -38,7 +38,7 @@ class CustomIbge():
         if self.agregador == "205":
 
             for grupo_idade in ids:
-                urlApiIBGE = f'http://servicodados.ibge.gov.br/api/v3/agregados/205/periodos/1991/variaveis/93?localidades=N6[all]&classificacao=2[4,5]|58[{grupo_idade}]'
+                urlApiIBGE = f'https://servicodados.ibge.gov.br/api/v3/agregados/205/periodos/1991/variaveis/93?localidades=N6[all]&classificacao=2[4,5]|58[{grupo_idade}]'
                 response = http.request('GET', urlApiIBGE)
                 data_response = response.data.decode('utf-8')
                 data_json = json.loads(data_response)
