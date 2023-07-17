@@ -81,8 +81,10 @@ class CustomIbge():
                 for resultado in data_json[0]['resultados']:
                     codigo_sexo = list(resultado['classificacoes'][0]['categoria'].keys())[0]
                     valor_sexo = resultado['classificacoes'][0]['categoria'][codigo_sexo]
-                    codigo_categoria = list(resultado['classificacoes'][1]['categoria'].keys())[0]
-                    valor_categoria = resultado['classificacoes'][1]['categoria'][codigo_categoria]
+                    codigo_situacao = list(resultado['classificacoes'][1]['categoria'].keys())[0]
+                    valor_situacao = resultado['classificacoes'][1]['categoria'][codigo_situacao]
+                    codigo_categoria = list(resultado['classificacoes'][2]['categoria'].keys())[0]
+                    valor_categoria = resultado['classificacoes'][2]['categoria'][codigo_categoria]
                     for serie in resultado['series']:
                         codigo_local = serie['localidade']['id']
                         nome_local = serie['localidade']['nome']
@@ -92,6 +94,8 @@ class CustomIbge():
                             {
                                 'codigo_sexo': codigo_sexo,
                                 'valor_sexo': valor_sexo,
+                                'codigo_situacao': codigo_situacao,
+                                'valor_situacao': valor_situacao,
                                 'codigo_local': codigo_local,
                                 'nome_local': nome_local,
                                 'ano': ano,
