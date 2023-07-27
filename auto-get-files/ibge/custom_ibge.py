@@ -1,10 +1,13 @@
 import urllib3
 import json
 import pandas as pd
-import requests
 from urllib3.util.ssl_ import create_urllib3_context
+import sys
+sys.path.append('/Users/MarianeLeite/projetos/sideprojects/devops-pysus-get-files/auto-get-files/custom_get_files')
+from custom_get_files.custom_get_files import CustomGetFiles
 
-ctx = create_urllib3_context()
+
+ctx = create_urllib3_context(CustomGetFiles)
 ctx.load_default_certs()
 ctx.options |= 0x4  # ssl.OP_LEGACY_SERVER_CONNECT
 

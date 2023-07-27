@@ -19,7 +19,7 @@ RUN pip3 install -r ./requirements.txt
 
 # Set home to developer
 ENV HOME /home/developer
-# Allow the application to execute as any UID 
+# Allow the application to execute as any UID
 # and still write temporary data to /tmp
 ENV APP_TMP_DATA=/tmp
 
