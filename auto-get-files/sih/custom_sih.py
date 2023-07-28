@@ -11,8 +11,6 @@ import warnings
 from datetime import date
 from ftplib import FTP
 from typing import Dict, List, Tuple, Union
-import sys
-sys.path.append('/Users/MarianeLeite/projetos/sideprojects/devops-pysus-get-files/auto-get-files/custom_get_files')
 from custom_get_files.custom_get_files import CustomGetFiles
 
 

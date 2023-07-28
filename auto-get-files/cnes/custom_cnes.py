@@ -1,7 +1,5 @@
 from ftplib import FTP
 from typing import List, Union
-import sys
-sys.path.append('/Users/MarianeLeite/projetos/sideprojects/devops-pysus-get-files/auto-get-files/custom_get_files')
 from custom_get_files.custom_get_files import CustomGetFiles
 
 generic_path = "/dissemin/publicos/CNES/200508_/Dados"

@@ -90,24 +90,24 @@ else:
     print('IBGE information already loaded')
 
 
-# IBGE_POP_FILE_PATH = f'{ibge_output_dir}/ibge_pop_sexo_grupos_idade_municipios.csv'
-# if not os.path.isfile(IBGE_POP_FILE_PATH):
-#     path = Path(ibge_output_dir)
-#     path.mkdir(parents=True, exist_ok=True)
-#
-#     custom_ibge = CustomIbge()
-#     custom_ibge.agregador = "200"
-#
-#     metadata = custom_ibge.get_metadata_list()
-#
-#     custom_ibge.get_files_to_download(ids=metadata).to_csv(
-#         IBGE_POP_FILE_PATH,
-#         sep=';',
-#         encoding='utf-8',
-#         index=False)
-#     print('Loaded IBGE population information')
-# else:
-#     print('IBGE information already loaded')
+IBGE_POP_FILE_PATH = f'{ibge_output_dir}/ibge_pop_sexo_grupos_idade_municipios.csv'
+if not os.path.isfile(IBGE_POP_FILE_PATH):
+    path = Path(ibge_output_dir)
+    path.mkdir(parents=True, exist_ok=True)
+
+    custom_ibge = CustomIbge()
+    custom_ibge.agregador = "200"
+
+    metadata = custom_ibge.get_metadata_list()
+
+    custom_ibge.get_files_to_download(ids=metadata).to_csv(
+        IBGE_POP_FILE_PATH,
+        sep=';',
+        encoding='utf-8',
+        index=False)
+    print('Loaded IBGE population information')
+else:
+    print('IBGE information already loaded')
 
 
 for file_type,file_groups in file_group_per_type.items():
