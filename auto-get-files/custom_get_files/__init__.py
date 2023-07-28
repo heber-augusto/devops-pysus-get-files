@@ -1,0 +1,2 @@
+class CustomGetFiles:
+    pass

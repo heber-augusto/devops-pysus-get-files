@@ -8,10 +8,9 @@ import json
 from pathlib import Path
 
 from datetime import datetime
-
-from sia.custom_sia   import get_files_to_download as sia_get_files
-from cnes.custom_cnes import get_files_to_download as cnes_get_files
-from sih.custom_sih  import get_files_to_download as sih_get_files
+from sia.custom_sia import CustomSia
+from sih.custom_sih import CustomSih
+from cnes.custom_cnes import CustomCnes
 
 from ibge.custom_ibge import CustomIbge
 
@@ -59,9 +58,9 @@ file_group_per_type = {
 
 # dicionario de funcoes por tipo
 func_per_type = {
-  'CNES':cnes_get_files,
-  'SIA':sia_get_files,
-  'SIH':sih_get_files,
+  'CNES': CustomCnes(),
+  'SIA':CustomSia(),
+  'SIH':CustomSih(),
 }
 
 def check_file_already_processed(
@@ -113,8 +112,8 @@ else:
 
 for file_type,file_groups in file_group_per_type.items():
     print(f'Listing files from {file_type} type')
-    get_file = func_per_type[file_type]
-    ftp_files = get_file(state, year, month, groups=file_groups)
+    ftp_classes = func_per_type[file_type]
+    ftp_files = ftp_classes.get_files_to_download(state, year, month, groups=file_groups)
     print(f'Got {len(ftp_files)} from {file_type}')
     # print(ftp_files)
     for file_group in ftp_files:
