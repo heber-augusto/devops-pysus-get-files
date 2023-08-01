@@ -96,11 +96,11 @@ class CustomCnes(CustomGetFiles):
                     'file_size': file_size,
                     'file_name': file_name,
                 }
-            print(f'Files found inside ftp {generic_path}->{gname}: {len(fdicts)}')
+            #print(f'Files found inside ftp {generic_path}->{gname}: {len(fdicts)}')
             for month in months:
                 try:
                     fname = f"{gname}{state}{year2.zfill(2)}{month}.dbc"
-                    print(f'checking if file {fname} exists')
+                    #print(f'checking if file {fname} exists')
                     files = []
                     if fname not in fdicts:
                         for l in ['a', 'b', 'c', 'd', 'e', 'f']:
@@ -113,7 +113,7 @@ class CustomCnes(CustomGetFiles):
                     for fdict in files:
                         file_name = fdict['file_name']
                         ftp_path = f"{path}/{file_name}"
-                        print(f'Reading file {ftp_path} from ftp')
+                        #print(f'Reading file {ftp_path} from ftp')
                         ftp_file_dict = {
                             'ftp_path': ftp_path,
                             'state': state,
