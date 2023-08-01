@@ -38,12 +38,12 @@ file_types = os.getenv('FILE_TYPE', 'PA').split(',')
 #groups = os.environ['FILE_TYPE']
 
 
-print(dbc_dir)
-print(dbf_dir)
-print(csv_dir)
-print(output_dir)
+# print(dbc_dir)
+# print(dbf_dir)
+# print(csv_dir)
+# print(output_dir)
 
-print('downloading')
+# print('downloading')
 
 # dicionario de grupos de arquivo por tipo
 file_group_per_type = {
@@ -115,7 +115,7 @@ def dbc_2_parquet_process(ftp_file_dict, pq_file_path):
     step = 'unknown'
     try:
         ftp_file = ftp_file_dict['ftp_path']
-        print(f'checking file {ftp_file}')
+        # print(f'checking file {ftp_file}')
         filename = os.path.basename(ftp_file)
         nm, ext = filename.split('.')
         dbf_file_path = f'{dbf_dir}/{nm}.dbf'
@@ -131,14 +131,14 @@ def dbc_2_parquet_process(ftp_file_dict, pq_file_path):
         # get files from FTP
         output_dbc = subprocess.check_output(['./collect_from_ftp.sh',ftp_file,dbc_dir])
 
-        print('creating dbf file')
+        # print('creating dbf file')
         step = 'convert dbc file to dbf'
         # convert dbc file to dbf
         output_dbf = subprocess.check_output(['./dbc-2-dbf',dbc_file_path,dbf_file_path])
         if remove_intermediate == True:
             os.unlink(dbc_file_path)
 
-        print('creating csv file')
+        # print('creating csv file')
         step = 'convert dbf to csv'
         # convert dbf to csv
         dbf_to_csv(dbf_file_path, csv_file_path)
@@ -146,12 +146,12 @@ def dbc_2_parquet_process(ftp_file_dict, pq_file_path):
             os.unlink(dbf_file_path)
 
         step = 'creating folders for file'
-        print(f'creating folders for file {pq_file_path}')
+        # print(f'creating folders for file {pq_file_path}')
         path = Path(pq_file_dir)
         path.mkdir(parents=True, exist_ok=True)
 
         step = 'creating parquet file'
-        print(f'creating parquet file {pq_file_path}')
+        # print(f'creating parquet file {pq_file_path}')
         # convert csv to parquet
         csv_to_parquet(csv_file_path, pq_file_path)
         if remove_intermediate == True:
@@ -159,7 +159,8 @@ def dbc_2_parquet_process(ftp_file_dict, pq_file_path):
 
         step = 'saving json done file'
         f = open(completed_file_path, 'w+')
-        f.write(json.dumps(ftp_file_dict)) 
+        f.write(json.dumps(ftp_file_dict))
+        print(f'Parquet file {pq_file_path} created with success')
     except:
         try:
             print(f'Erro during step {step} from file {ftp_file}')
@@ -171,10 +172,10 @@ def dbc_2_parquet_process(ftp_file_dict, pq_file_path):
 def get_sus_data_to_collect(file_type, state, year, month):
     files_to_collect = []
     file_groups = file_group_per_type[file_type]
-    print(f'Listing files from {file_type} type')
+    #print(f'Listing files from {file_type} type')
     ftp_classes = func_per_type[file_type]
     ftp_files = ftp_classes.get_files_to_download(state, year, month, groups=file_groups)
-    print(f'Got {len(ftp_files)} from {file_type}')
+    #print(f'Got {len(ftp_files)} from {file_type}')
     # print(ftp_files)
     for file_group in ftp_files:
         # print(f'Collecting files from {file_group}')
@@ -182,7 +183,7 @@ def get_sus_data_to_collect(file_type, state, year, month):
             step = 'unknown'
             try:
                 ftp_file = ftp_file_dict['ftp_path']
-                print(f'checking file {ftp_file}')
+                #print(f'checking file {ftp_file}')
                 filename = os.path.basename(ftp_file)
                 nm, ext = filename.split('.')
 
@@ -196,7 +197,7 @@ def get_sus_data_to_collect(file_type, state, year, month):
                 # se arquivo ja existe e não tem modificacao, continua para o proximo
                 if (os.path.exists(completed_file_path) == True) and \
                 (check_file_already_processed(completed_file_path , ftp_file_dict) == True):
-                    print(f'file {nm} already exists')
+                    # print(f'file {nm} already exists')
                     continue
                 files_to_collect_dict = {}
                 files_to_collect_dict['pq_file_path']  = pq_file_path
@@ -205,11 +206,12 @@ def get_sus_data_to_collect(file_type, state, year, month):
               
             except:
                 try:
-                    print(f'Erro during step {step} from file {ftp_file}')
+                    print(f'{state}-{year}-{month}: Error during step {step} from file {ftp_file}')
                 except:
-                    print(f'Erro during step {step}')
+                    print(f'{state}-{year}-{month}: Error during step {step}')
                     pass
                 continue
+    print(f'{state}-{year}-{month}: got {len(files_to_collect)} files from {file_type}') 
     return files_to_collect
 
 
