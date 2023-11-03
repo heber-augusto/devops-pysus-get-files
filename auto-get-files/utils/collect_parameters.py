@@ -33,7 +33,7 @@ def print_parameters_monthly():
     
     # validate states
     if STATES == '':
-        states = ['SP',]
+        states = ufs
     else:
         states = STATES.split(',')
 
