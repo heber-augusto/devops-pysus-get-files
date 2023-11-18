@@ -3,7 +3,7 @@ from typing import List, Union
 from custom_get_files.custom_get_files import CustomGetFtpFiles
 
 generic_path = "/dissemin/publicos/CNES/200508_/Dados"
-CNES_GROUPS = ['DC','EP','EQ','HB','IN','LT','PF','RC','SR','ST']
+CNES_GROUPS = ['DC','EP','EQ','HB','IN','LT','PF','RC','SR']
 
 class CustomCnes(CustomGetFtpFiles):
 
