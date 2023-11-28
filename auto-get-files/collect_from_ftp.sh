@@ -33,7 +33,7 @@ else
 fi
 FILE_PATH=$1
 DIR_FILES_DEST=$2
-wget -P $DIR_FILES_DEST -c -t 1 -w 5m --user=Anonymous password= ftp://ftp.datasus.gov.br${FILE_PATH}
+wget -P $DIR_FILES_DEST -t 1 -w 5m --user=Anonymous password= ftp://ftp.datasus.gov.br${FILE_PATH}
 if [ $? -ne 0 ]; then
    vrc=25
 else
