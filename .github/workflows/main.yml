@@ -40,8 +40,8 @@ jobs:
           export TEMP_DIR=${{ github.workspace }}/temp-files          
           mkdir ${OUTPUT_DIR}
           mkdir ${TEMP_DIR}
-          mkdir ${TEMP_DIR}/dbc-files
-          chmod o+w  ${TEMP_DIR}/dbc-files/.
+          mkdir ${OUTPUT_DIR}/dbc-files
+          chmod o+w  ${OUTPUT_DIR}/dbc-files/.
           mkdir ${TEMP_DIR}/dbf-files
           chmod o+w ${TEMP_DIR}/dbf-files/.
           mkdir ${TEMP_DIR}/csv-files
@@ -72,7 +72,7 @@ jobs:
           chmod +x dbc-2-dbf
           export OUTPUT_DIR=${{ github.workspace }}/output-files/monitor
           export TEMP_DIR=${{ github.workspace }}/temp-files          
-          export DBC_DIR=${TEMP_DIR}/dbc-files
+          export DBC_DIR=${OUTPUT_DIR}/dbc-files
           export DBF_DIR=${TEMP_DIR}/dbf-files
           export CSV_DIR=${TEMP_DIR}/csv-files  
           
