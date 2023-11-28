@@ -131,6 +131,7 @@ def dbc_2_parquet_process(ftp_file_dict, pq_file_path):
         step = 'get files from FTP'
         # get files from FTP
         output_dbc = subprocess.check_output(['./collect_from_ftp.sh',ftp_file,dbc_dir])
+        output_dbc = subprocess.check_output(['./collect_from_ftp.sh',ftp_file,dbc_dir])
 
         # print('creating dbf file')
         step = 'convert dbc file to dbf'
