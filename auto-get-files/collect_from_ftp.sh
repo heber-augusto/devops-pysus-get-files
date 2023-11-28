@@ -33,6 +33,6 @@ else
 fi
 FILE_PATH=$1
 DIR_FILES_DEST=$2
-wget -q -P $DIR_FILES_DEST --user=Anonymous password= ftp://ftp.datasus.gov.br${FILE_PATH}
+wget -P $DIR_FILES_DEST --user=Anonymous password= ftp://ftp.datasus.gov.br${FILE_PATH}
 echo "Arquivo \$1 coletado com sucesso!"
 exit $vrc
