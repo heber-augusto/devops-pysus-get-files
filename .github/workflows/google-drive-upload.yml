@@ -72,8 +72,8 @@ jobs:
           export STATES=${{ github.event.inputs.states}}
           export START_DATE=${{ github.event.inputs.start_date}}
           export END_DATE=${{ github.event.inputs.end_date}}          
-          # python3 ./main.py
-          ls ${OUTPUT_DIR}
+          python3 ./main.py
+          #ls ${OUTPUT_DIR}
 
       - run: echo "🍏 This job's status is ${{ job.status }}."
       - uses: gautamkrishnar/keepalive-workflow@v1 # using the workflow with default settings
