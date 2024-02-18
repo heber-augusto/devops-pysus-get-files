@@ -49,10 +49,6 @@ jobs:
 
       - name: 'install gcsfuse to access bucket'
         run: |
-          sudo add-apt-repository --yes ppa:alessandro-strada/ppa
-          sudo apt-get update
-          sudo apt-get install google-drive-ocamlfuse   
-          
           mkdir datalake
           chmod o+w datalake/.
           mkdir gdfuse        
@@ -60,8 +56,7 @@ jobs:
 
           export XDG_CONFIG_HOME=${{ github.workspace }}
           fusermount -u ${OUTPUT_DIR}
-          google-drive-ocamlfuse -xdgbd -label monitor -serviceaccountpath $GOOGLE_APPLICATION_CREDENTIALS -serviceaccountuser ${{ secrets.serviceaccountuser }} 
-          
+          ./bin/mount_google_drive.sh '${{ github.workspace }}' '${{ secrets.serviceaccountuser }}' '${{ secrets.google_team_drive_id }}' '${{ GOOGLE_APPLICATION_CREDENTIALS }}'         
           
       - name: Prepare permissions, scripts and call script to collect files
         working-directory: ./auto-get-files
@@ -81,7 +76,8 @@ jobs:
           export STATES=${{ github.event.inputs.states}}
           export START_DATE=${{ github.event.inputs.start_date}}
           export END_DATE=${{ github.event.inputs.end_date}}          
-          python3 ./main.py
+          # python3 ./main.py
+          ls ${OUTPUT_DIR}/datalake/monitor
 
       - run: echo "🍏 This job's status is ${{ job.status }}."
       - uses: gautamkrishnar/keepalive-workflow@v1 # using the workflow with default settings
