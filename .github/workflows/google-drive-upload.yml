@@ -62,7 +62,7 @@ jobs:
           gcc blast.c blast-dbf.c -o ../dbc-2-dbf
           cd ..
           chmod +x dbc-2-dbf
-          export OUTPUT_DIR=${{ github.workspace }}/output-files/monitor
+          export OUTPUT_DIR=${{ github.workspace }}/output-files/datalake/monitor
           export TEMP_DIR=${{ github.workspace }}/temp-files          
           export DBC_DIR=${TEMP_DIR}/dbc-files
           export DBF_DIR=${TEMP_DIR}/dbf-files
@@ -73,7 +73,7 @@ jobs:
           export START_DATE=${{ github.event.inputs.start_date}}
           export END_DATE=${{ github.event.inputs.end_date}}          
           # python3 ./main.py
-          ls ${OUTPUT_DIR}/datalake/monitor
+          ls ${OUTPUT_DIR}
 
       - run: echo "🍏 This job's status is ${{ job.status }}."
       - uses: gautamkrishnar/keepalive-workflow@v1 # using the workflow with default settings
