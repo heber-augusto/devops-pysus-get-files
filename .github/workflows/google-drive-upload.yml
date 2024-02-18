@@ -1,0 +1,87 @@
+name: Download files from SUS FTP
+run-name: ${{ github.actor }} is collecting data using GitHub Actions 🚀
+on: 
+  workflow_dispatch:
+    inputs:
+      states:
+        description: 'States to collect files'
+        required: false
+        default: 'RO,AC,AM,RR,PA,AP,TO,MA,PI,CE,RN,PB,PE,AL,SE,BA,MG,ES,RJ,SP,PR,SC,RS,MS,MT,GO,DF'
+      start_date:
+        description: 'Start date (YYYY-MM-DD)'
+        required: false
+      end_date:
+        description: 'End date (YYYY-MM-DD)'
+        required: false
+    # agendamento para execucao todo dia as 8:00 da manhã
+  schedule:
+    - cron:  '0 8 * * *'
+jobs:
+  Collecting-Data-Using-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
+      - name: 'google-auth'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.gd_credentials }}'
+      - name: Create output and temp dir
+        run: |  
+          export OUTPUT_DIR=${{ github.workspace }}/output-files
+          export TEMP_DIR=${{ github.workspace }}/temp-files          
+          mkdir ${OUTPUT_DIR}
+          mkdir ${TEMP_DIR}
+          mkdir ${TEMP_DIR}/dbc-files
+          chmod o+w  ${TEMP_DIR}/dbc-files/.
+          mkdir ${TEMP_DIR}/dbf-files
+          chmod o+w ${TEMP_DIR}/dbf-files/.
+          mkdir ${TEMP_DIR}/csv-files
+          chmod o+w ${TEMP_DIR}/csv-files/.          
+
+      - name: 'install gcsfuse to access bucket'
+        run: |
+          sudo add-apt-repository --yes ppa:alessandro-strada/ppa
+          sudo apt-get update
+          sudo apt-get install google-drive-ocamlfuse   
+          
+          mkdir datalake
+          chmod o+w datalake/.
+          mkdir gdfuse        
+          chmod o+w gdfuse/.
+
+          export XDG_CONFIG_HOME=${{ github.workspace }}
+          fusermount -u ${OUTPUT_DIR}
+          google-drive-ocamlfuse -xdgbd -label monitor -serviceaccountpath $GOOGLE_APPLICATION_CREDENTIALS -serviceaccountuser ${{ secrets.serviceaccountuser }} 
+          
+          
+      - name: Prepare permissions, scripts and call script to collect files
+        working-directory: ./auto-get-files
+        run: |
+          chmod +x collect_from_ftp.sh
+          cd ./blast
+          gcc blast.c blast-dbf.c -o ../dbc-2-dbf
+          cd ..
+          chmod +x dbc-2-dbf
+          export OUTPUT_DIR=${{ github.workspace }}/output-files/monitor
+          export TEMP_DIR=${{ github.workspace }}/temp-files          
+          export DBC_DIR=${TEMP_DIR}/dbc-files
+          export DBF_DIR=${TEMP_DIR}/dbf-files
+          export CSV_DIR=${TEMP_DIR}/csv-files  
+          
+          pip3 install -r ../requirements.txt
+          export STATES=${{ github.event.inputs.states}}
+          export START_DATE=${{ github.event.inputs.start_date}}
+          export END_DATE=${{ github.event.inputs.end_date}}          
+          python3 ./main.py
+
+      - run: echo "🍏 This job's status is ${{ job.status }}."
+      - uses: gautamkrishnar/keepalive-workflow@v1 # using the workflow with default settings
