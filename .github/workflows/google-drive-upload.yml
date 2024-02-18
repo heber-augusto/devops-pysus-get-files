@@ -1,4 +1,4 @@
-name: Download files from SUS FTP
+name: Download files from SUS FTP (Google Drive)
 run-name: ${{ github.actor }} is collecting data using GitHub Actions 🚀
 on: 
   workflow_dispatch:
