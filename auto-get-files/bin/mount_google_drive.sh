@@ -3,7 +3,9 @@ apt-get update
 apt-get install google-drive-ocamlfuse
 
 mkdir "${1}/datalake"
+chmod o+w "${1}/datalake"/.
 mkdir "${1}/gdfuse"
+chmod o+w "${1}/gdfuse"/.
 
 google-drive-ocamlfuse -xdgbd -label monitor -serviceaccountpath "${4}" -serviceaccountuser "${2}"
 
