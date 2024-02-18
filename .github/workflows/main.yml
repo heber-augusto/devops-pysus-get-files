@@ -14,8 +14,8 @@ on:
         description: 'End date (YYYY-MM-DD)'
         required: false
     # agendamento para execucao todo dia as 8:00 da manhã
-  schedule:
-    - cron:  '0 8 * * *'
+  #schedule:
+  #  - cron:  '0 8 * * *'
 jobs:
   Collecting-Data-Using-GitHub-Actions:
     runs-on: ubuntu-latest
