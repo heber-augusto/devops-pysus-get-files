@@ -56,7 +56,7 @@ jobs:
 
           export XDG_CONFIG_HOME=${{ github.workspace }}
           fusermount -u ${OUTPUT_DIR}
-          ./bin/mount_google_drive.sh '${{ github.workspace }}' '${{ secrets.serviceaccountuser }}' '${{ secrets.google_team_drive_id }}' '${{ GOOGLE_APPLICATION_CREDENTIALS }}'         
+          ./bin/mount_google_drive.sh '${{ github.workspace }}' '${{ secrets.serviceaccountuser }}' '${{ secrets.google_team_drive_id }}' $GOOGLE_APPLICATION_CREDENTIALS        
           
       - name: Prepare permissions, scripts and call script to collect files
         working-directory: ./auto-get-files
