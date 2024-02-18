@@ -47,8 +47,9 @@ jobs:
           mkdir ${TEMP_DIR}/csv-files
           chmod o+w ${TEMP_DIR}/csv-files/.          
 
-      - name: 'install gcsfuse to access bucket'
+      - name: 'install gdfuse to access google team drive'
         run: |
+          export OUTPUT_DIR=${{ github.workspace }}/output-files        
           mkdir datalake
           chmod o+w datalake/.
           mkdir gdfuse        
