@@ -34,7 +34,8 @@ fi
 FILE_PATH=$1
 DIR_FILES_DEST=$2
 # wget -q -P $DIR_FILES_DEST --user=Anonymous password= ftp://ftp.datasus.gov.br${FILE_PATH}
-wget -q -P $DIR_FILES_DEST -t 2 -w 10m --user=Anonymous password= ftp://ftp.datasus.gov.br${FILE_PATH}
+wget --continue -q -P $DIR_FILES_DEST -t 2 -w 10m --user=Anonymous --password= ftp://ftp.datasus.gov.br${FILE_PATH}
+
 if [ $? -ne 0 ]; then
    vrc=25
 else
