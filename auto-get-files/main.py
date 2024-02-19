@@ -162,9 +162,9 @@ def dbc_2_parquet_process(ftp_file_dict, pq_file_path):
         f = open(completed_file_path, 'w+')
         f.write(json.dumps(ftp_file_dict))
         print(f'Parquet file {pq_file_path} created with success')
-    except:
+    except Exception as inst:
         try:
-            print(f'Erro during step {step} from file {ftp_file}')
+            print(f'Exception {inst} during step {step} from file {ftp_file}')
         except:
             print(f'Erro during step {step}')
             pass
