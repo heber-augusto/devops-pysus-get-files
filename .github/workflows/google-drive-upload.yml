@@ -48,7 +48,7 @@ jobs:
 
       - name: Create temp dir
         run: |  
-          export TEMP_DIR=${{ github.workspace }}/output-files/datalake/temp-files          
+          export TEMP_DIR=${{ github.workspace }}/temp-files          
           mkdir ${TEMP_DIR}
           mkdir ${TEMP_DIR}/dbc-files
           chmod o+w  ${TEMP_DIR}/dbc-files/.
@@ -66,7 +66,7 @@ jobs:
           cd ..
           chmod +x dbc-2-dbf
           export OUTPUT_DIR=${{ github.workspace }}/output-files/datalake/monitor
-          export TEMP_DIR=${{ github.workspace }}/output-files/datalake/temp-files          
+          export TEMP_DIR=${{ github.workspace }}/temp-files          
           export DBC_DIR=${TEMP_DIR}/dbc-files
           export DBF_DIR=${TEMP_DIR}/dbf-files
           export CSV_DIR=${TEMP_DIR}/csv-files  
