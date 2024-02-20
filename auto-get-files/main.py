@@ -253,7 +253,7 @@ if __name__ == "__main__":
     # Tempo com pool de 10: 0:35:56.498708
     # Tempo com pool de 1: 
 
-    with Pool(10) as pool:
+    with Pool(1) as pool:
         pool.starmap(dbc_2_parquet_process, to_download)
     
     #file_to_collect_dict = dbc_files_to_collect[0]
