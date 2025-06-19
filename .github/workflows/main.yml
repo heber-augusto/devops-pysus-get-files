@@ -82,5 +82,10 @@ jobs:
           export END_DATE=${{ github.event.inputs.end_date}}          
           python3 ./main.py
 
-      - run: echo "🍏 This job's status is ${{ job.status }}."
-      - uses: gautamkrishnar/keepalive-workflow@v1 # using the workflow with default settings
+  workflow-keepalive:
+    # if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - uses: liskin/gh-workflow-keepalive@v1
