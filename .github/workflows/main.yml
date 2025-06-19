@@ -83,7 +83,8 @@ jobs:
           python3 ./main.py
 
   workflow-keepalive:
-    # if: github.event_name == 'schedule'
+    if: github.event_name == 'schedule'
+    needs: Collecting-Data-Using-GitHub-Actions
     runs-on: ubuntu-latest
     permissions:
       actions: write
